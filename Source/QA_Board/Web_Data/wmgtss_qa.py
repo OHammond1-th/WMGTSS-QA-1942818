@@ -22,3 +22,7 @@ def get_published_posts():
 
 def get_posts_by_user(user_id):
     return get_table('posts', '*', f"WHERE 'posts'('author_id') = {user_id}")
+
+
+def get_post_comments(post_id):
+    return get_table('comments', '*', f"WHERE 'comments'('parent_id') = {post_id}")
