@@ -3,7 +3,6 @@ from dataclasses import dataclass
 import datetime
 import time
 
-
 @dataclass
 class Comment:
     id: int
@@ -22,6 +21,13 @@ class Question:
     date_created: datetime.datetime
     published: bool
     comments: list = None
+
+    @staticmethod
+    def get_question_by_id(question_id):
+        for question in wmgtss_qa.get_posts_by_user():
+            if question.id == question_id:
+                return question
+        return None
 
 
 class Model:
@@ -51,4 +57,3 @@ class Model:
                 for comment
                 in wmgtss_qa.get_post_comments(question.id)
             ]
-

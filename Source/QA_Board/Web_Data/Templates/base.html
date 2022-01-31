@@ -5,7 +5,12 @@
     <title>Title</title>
 </head>
 <body>
-
+    <div class="static">
+        {% block static_content %} {% endblock %}
+    </div>
+    <div class="scrolling">
+        {% block scroll_content %} {% endblock %}
+    </div>
 </body>
 <footer>
     <script
