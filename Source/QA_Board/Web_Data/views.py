@@ -3,24 +3,36 @@ import models
 
 views = Blueprint('views', __name__)
 
-@views.route('/Login')
-def login():
 
-    #TODO: Create secure login portal to get user data
+@views.route('/Login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'GET':
+        return render_template("login.html")
+
+    if request.method == 'POST':
+        # TODO: Verify user input for secure login
+        pass
+
+    else:
+        return "<h1>405: Method not allowed.</h1>"
+
 
 @views.route('/')
 def home():
     return "<h1>Test<h1>"
 
+
 @views.route('/Questions')
 def question_list():
-
-    #TODO: Get list of Public and Private questions
+    # TODO: Get list of Public and Private questions
+    questions_public = None
+    questions_private = None
 
     return render_template("question_list.html",
-                           public_questions=Questions["public"],
-                           private_questions=Questions["private"]
+                           public_questions=questions_public,
+                           private_questions=questions_private
                            )
+
 
 @views.route('/Questions/<int:question_id>')
 def question_page(question_id):

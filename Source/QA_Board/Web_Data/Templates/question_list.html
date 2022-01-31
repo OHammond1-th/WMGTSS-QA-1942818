@@ -1,14 +1,25 @@
 {% extends "base.html" %}
 {% block static_content %}
-<div class="container">
-    <div class="published">
-        {% for question in public_questions %}
-            {% include "question_template.html" %}
-        {% endfor %}
+    <div class="container">
+        <div class="left">
+            <button id="ShowPub"> Published </button>
+        </div>
+        <div class="right">
+            <button id="ShowPri"> Private </button>
+        </div>
     </div>
-    <div class="personal">
-        {% for question in private_questions %}
-            {% include "question_template.html" %}
-        {% endfor %}
+{% endblock %}
+{% block scroll_content %}
+    <div class="container">
+        <div class="published" id="ques-pub">
+            {% for question in public_questions %}
+                {% include "question_template.html" %}
+            {% endfor %}
+        </div>
+        <div class="personal" id="ques-pri">
+            {% for question in private_questions %}
+                {% include "question_template.html" %}
+            {% endfor %}
+        </div>
     </div>
-</div>
+{% endblock %}
