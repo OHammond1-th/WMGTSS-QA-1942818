@@ -17,7 +17,8 @@ CREATE TABLE "courses" (
 CREATE TABLE "users" (
 	"user_id" BIGSERIAL PRIMARY KEY,
 	"role_id" INTEGER NOT NULL,
-	"user_fakename" VARCHAR(256) NOT NULL,
+	"user_username" VARCHAR(256) NOT NULL,
+	"user_password" VARCHAR(256),
 	"user_firstname" VARCHAR(256) NOT NULL,
 	"user_lastname" VARCHAR(256) NOT NULL,
 	"user_dateofbirth" DATE NOT NULL,
@@ -37,12 +38,14 @@ CREATE TABLE "enrollments" (
 
 CREATE TABLE "posts" (
 	"post_id" BIGSERIAL PRIMARY KEY,
+	"course_id" INTEGER NOT NULL,
 	"author_id" INTEGER NOT NULL,
 	"post_title" VARCHAR(512) NOT NULL,
 	"post_description" VARCHAR(2048) DEFAULT EMPTY,
 	"post_answer" VARCHAR(2048),
 	"post_created" DATE DEFAULT CURRENT_DATE,
 	"post_published" BOOLEAN DEFAULT FALSE,
+	constraint "fk_course_id" foreign key ("course_id") REFERENCES "courses"("course_id"),
 	constraint "fk_author_id" foreign key ("author_id") REFERENCES "users"("user_id")
 );
 

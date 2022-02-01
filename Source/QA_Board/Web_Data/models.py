@@ -1,14 +1,21 @@
 import wmgtss_qa
 from dataclasses import dataclass
-import datetime
+import datetime as dt
 import time
 
 @dataclass
-class Comment:
+class User:
     id: int
-    description: str
-    date_created: datetime.datetime
-    parent: int = None
+    role: int
+    firstname: str
+    lastname: str
+    date_of_birth: dt.datetime
+    last_interaction: dt.datetime
+    created: dt.datetime
+
+    @staticmethod
+    def get_all_students():
+        return [User(*result) for result in wmgtss_qa.get_users_by_role("student")]
 
 
 @dataclass
@@ -18,42 +25,41 @@ class Question:
     title: str
     description: str
     answer: str
-    date_created: datetime.datetime
+    date_created: dt.datetime
     published: bool
-    comments: list = None
+    publishable: bool
 
     @staticmethod
-    def get_question_by_id(question_id):
-        for question in wmgtss_qa.get_posts_by_user():
-            if question.id == question_id:
-                return question
-        return None
+    def get_public_questions():
+        return [Question(*result) for result in wmgtss_qa.get_published_posts()]
+
+    @staticmethod
+    def get_private_questions(user_id):
+        return [Question(*result) for result in wmgtss_qa.get_posts_by_user(user_id)]
 
 
-class Model:
+@dataclass
+class Comment:
+    id: int
+    post: int
+    author: int
+    parent_comment: int
+    description: str
+    date_created: dt.datetime
 
-    def __init__(self, user_id, role):
-        self.user_id = user_id
-        self.role = role
-        self.questions = []
-        self.update()
+    @staticmethod
+    def get_post_comments(post_id):
+        comments = [{'object': result, 'level': 0} for result in wmgtss_qa.get_post_comments(post_id)]
 
-    def update(self):
+        for comment in comments:
 
-        self.questions = [
-            Question(
-                question['post_id'], question['post_title'], question['post_description'], question['post_answer'],
-                question['post_created'], question['post_published']
-            )
-            for question
-            in wmgtss_qa.get_posts_by_user(self.user_id)
-        ]
+            if comment['object'].parent_comment is None:
+                break
 
-        for question in self.questions:
-            question.comments = [
-                Comment(
-                    comment['comment_id'], comment['comment_description'], comment['comment_created'],
-                    comment['parent_id'])
-                for comment
-                in wmgtss_qa.get_post_comments(question.id)
-            ]
+            for parent in comments:
+
+                if parent['object'].id == comment['object'].parent_comment:
+                    comment['level'] = parent['level'] + 1
+                    break
+
+        return comments

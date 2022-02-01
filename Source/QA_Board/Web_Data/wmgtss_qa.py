@@ -16,6 +16,11 @@ def get_user(user_id):
     return get_table('users', '*', f"WHERE 'users'('user_id') = {user_id}")
 
 
+def get_users_by_role(role):
+    return get_table('users', '*', f"OUTER JOIN 'roles' AT 'roles'('role_id') = 'users'('role_id')"
+                                   f" WHERE 'users'(''role_id) = {role}")
+
+
 def get_published_posts():
     return get_table('posts', '*', f"WHERE 'posts'('post_published') = TRUE")
 
