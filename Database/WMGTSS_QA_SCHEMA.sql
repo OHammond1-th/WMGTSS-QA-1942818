@@ -1,5 +1,13 @@
 CREATE DATABASE "WMGTSS_QA";
 
+CREATE ROLE web_client WITH
+	NOSUPERUSER
+	NOCREATEDB
+	NOCREATEROLE
+	NOINHERIT
+	LOGIN
+;
+
 CREATE TABLE "roles" (
 	"role_id" BIGSERIAL PRIMARY KEY,
 	"role_name" VARCHAR(256) NOT NULL,
@@ -17,8 +25,8 @@ CREATE TABLE "courses" (
 CREATE TABLE "users" (
 	"user_id" BIGSERIAL PRIMARY KEY,
 	"role_id" INTEGER NOT NULL,
-	"user_username" VARCHAR(256) NOT NULL,
-	"user_password" VARCHAR(256),
+	"user_username" VARCHAR(256) NOT NULL UNIQUE,
+	"user_password" VARCHAR(256) UNIQUE,
 	"user_firstname" VARCHAR(256) NOT NULL,
 	"user_lastname" VARCHAR(256) NOT NULL,
 	"user_dateofbirth" DATE NOT NULL,
@@ -53,8 +61,8 @@ CREATE TABLE "comments" (
 	"comment_id" BIGSERIAL PRIMARY KEY,
 	"post_id" INTEGER NOT NULL,
 	"author_id" INTEGER NOT NULL,
-	"comment_description" VARCHAR(2048) NOT NULL,
 	"parent_id" INTEGER DEFAULT NULL,
+	"comment_description" VARCHAR(2048) NOT NULL,
 	"comment_created" DATE DEFAULT CURRENT_DATE,
 	constraint "fk_post_id" foreign key ("post_id") REFERENCES "posts"("post_id"),
 	constraint "fk_author_id" foreign key ("author_id") REFERENCES "users"("user_id"),

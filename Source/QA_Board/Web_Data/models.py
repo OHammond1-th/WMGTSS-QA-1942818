@@ -1,17 +1,36 @@
-import wmgtss_qa
+from . import wmgtss_qa
 from dataclasses import dataclass
 import datetime as dt
 import time
 
+
 @dataclass
 class User:
-    id: int
+    ident: int
     role: int
+    username: str
+    password: str
     firstname: str
     lastname: str
     date_of_birth: dt.datetime
     last_interaction: dt.datetime
     created: dt.datetime
+
+    # Flask_login required
+    is_authenticated = False
+    is_active = False
+    is_anonymous = False
+
+    def get_id(self):
+        return str(self.ident)
+
+    @staticmethod
+    def get_by_id(user_id):
+        return User(*wmgtss_qa.get_user(user_id))
+
+    @staticmethod
+    def get_by_username(username):
+        return User(*wmgtss_qa.get_user_by_username(username))
 
     @staticmethod
     def get_all_students():
@@ -21,7 +40,7 @@ class User:
 @dataclass
 class Question:
 
-    id: int
+    ident: int
     title: str
     description: str
     answer: str
@@ -34,8 +53,16 @@ class Question:
         return [Question(*result) for result in wmgtss_qa.get_published_posts()]
 
     @staticmethod
+    def get_class_questions(class_id):
+        return [Question(*result) for result in wmgtss_qa.get_posts_by_class(class_id)]
+
+    @staticmethod
     def get_private_questions(user_id):
         return [Question(*result) for result in wmgtss_qa.get_posts_by_user(user_id)]
+
+    @staticmethod
+    def get_question_by_id(question_id):
+        return Question(*wmgtss_qa.get_post(question_id))
 
 
 @dataclass

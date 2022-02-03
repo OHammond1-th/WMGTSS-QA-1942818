@@ -30,6 +30,13 @@
                 </div>
             </form>
         </div>
+        <div>
+            <h4 id="failed_login">
+                {% if failed %}
+                    Username or Password is incorrect
+                {% endif %}
+            </h4>
+        </div>
     </div>
 </body>
 </html>
