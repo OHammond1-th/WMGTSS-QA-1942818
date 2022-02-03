@@ -1,5 +1,5 @@
 import psycopg2 as psql
-from .postrgesql_api import DB_API
+from postrgesql_api import DB_API
 
 database = DB_API("WMGTSS_QA", "web_client", "default")
 

@@ -24,7 +24,7 @@ def login():
             if correct_password:
 
                 login_user(user)
-                return redirect(url_for("question_list"))
+                return redirect(url_for("views.question_list"))
 
         return render_template("login.html", failed=True)
 
@@ -34,7 +34,7 @@ def login():
 
 @views.route('/')
 def home():
-    return redirect(url_for('login'))
+    return redirect(url_for('views.login'))
 
 
 @views.route('/Questions')
@@ -54,7 +54,7 @@ def question_list():
 def question_list_post():
     _id = request.form.get("post_id")
     if _id:
-        return redirect(url_for('question_page', question_id=_id))
+        return redirect(url_for('views.question_page', question_id=_id))
 
 
 @views.route('/Questions/<int:question_id>')
@@ -67,4 +67,4 @@ def question_page(question_id):
     if question:
         return render_template("question_page.html", question=question, comments=comments)
     else:
-        return redirect(url_for("question_list"))
+        return redirect(url_for("views.question_list"))
