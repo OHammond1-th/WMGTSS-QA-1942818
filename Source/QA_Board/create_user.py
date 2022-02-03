@@ -1,7 +1,5 @@
 import re
-
 from postrgesql_api import DB_API
-from datetime import datetime
 from sys import argv
 from os.path import exists
 
@@ -45,7 +43,7 @@ def query_from_file(file_path):
         database.commit()
 
     except ValueError as e:
-        print(f"Args did not meet those required:\t{e}/6")
+        print(f"Args did not meet those required:\t{e}/5-6")
         database.rollback()
 
 
