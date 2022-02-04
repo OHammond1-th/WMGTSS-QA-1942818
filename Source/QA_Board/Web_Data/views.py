@@ -42,7 +42,7 @@ def home():
 @login_required
 def question_list():
     questions_public = Question.get_public_questions(current_user.get_classes())
-    questions_private = Question.get_private_questions(Question.get_private_questions(current_user.get_id()))
+    questions_private = Question.get_private_questions(current_user.get_id())
 
     return render_template("question_list.html",
                            public_questions=questions_public,

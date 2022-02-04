@@ -1,7 +1,7 @@
 from . import wmgtss_qa
+from flask_login import UserMixin
 from dataclasses import dataclass
 import datetime as dt
-import time
 
 
 # Helper function to avoid having runtime errors about parameters not being correct
@@ -17,7 +17,7 @@ pc = protect_construct
 
 
 @dataclass
-class User:
+class User(UserMixin):
     ident: int
     role: int
     username: str
@@ -27,11 +27,6 @@ class User:
     date_of_birth: dt.datetime
     last_interaction: dt.datetime
     created: dt.datetime
-
-    # Flask_login required
-    is_authenticated = False
-    is_active = True
-    is_anonymous = False
 
     def get_id(self):
         return str(self.ident)
