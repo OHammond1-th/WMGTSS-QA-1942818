@@ -1,29 +1,47 @@
 import psycopg2 as psql
-import psycopg2.extras as psqx
+import sys
 
 
 class DB_API:
 
     def __init__(self, dbname, user, password):
         self.database = psql.connect(f"dbname='{dbname}' user='{user}' password='{password}'")
-        self.cursor = self.database.cursor(cursor_factory=psqx.DictCursor)
+        self.cursor = self.database.cursor()
         self.result_buffer = None
 
     def query(self, query):
         try:
-            self.result_buffer = self.cursor.execute(query).fetchall()
-        except psql.Error:
-            print("Query failed")
-            self.cursor.rollback()
+            self.cursor.execute(query)
+
+            # psycopg2 throws an error if no results are found but we just want it to set the result buffer to None
+            try:
+                self.result_buffer = self.cursor.fetchall()
+            except Exception as e:
+                self.result_buffer = None
+
+        except psql.Error as e:
+            print("Query failed:", e.pgerror, e)
+            self.database.rollback()
 
     def commit(self):
-        self.cursor.commit()
+        self.database.commit()
 
     def rollback(self):
-        self.cursor.rollback()
+        self.database.rollback()
 
-    def get_result(self):
-        self.cursor.commit()
+    def get_result(self, amount=None):
+        if self.result_buffer is None:
+            return []
+
+        self.database.commit()
+
+        if len(self.result_buffer) == 1 or amount == 1:
+            return self.result_buffer[0]
+
+        if amount:
+
+            amount = min(amount, len(self.result_buffer))
+            return self.result_buffer[:amount]
         return self.result_buffer
 
     def __str__(self):

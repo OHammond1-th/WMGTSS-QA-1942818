@@ -4,6 +4,18 @@ import datetime as dt
 import time
 
 
+# Helper function to avoid having runtime errors about parameters not being correct
+def protect_construct(class_type, arguments):
+    try:
+        return class_type(*arguments)
+    except TypeError as e:
+        print("Error in protect_construct function: ", e)
+        return None
+
+
+pc = protect_construct
+
+
 @dataclass
 class User:
     ident: int
@@ -18,23 +30,26 @@ class User:
 
     # Flask_login required
     is_authenticated = False
-    is_active = False
+    is_active = True
     is_anonymous = False
 
     def get_id(self):
         return str(self.ident)
 
+    def get_classes(self):
+        return [course for course in wmgtss_qa.get_users_enrollments(self.get_id())]
+
     @staticmethod
     def get_by_id(user_id):
-        return User(*wmgtss_qa.get_user(user_id))
+        return pc(User, wmgtss_qa.get_user(user_id))
 
     @staticmethod
     def get_by_username(username):
-        return User(*wmgtss_qa.get_user_by_username(username))
+        return pc(User, wmgtss_qa.get_user_by_username(username))
 
     @staticmethod
     def get_all_students():
-        return [User(*result) for result in wmgtss_qa.get_users_by_role("student")]
+        return [pc(User, result) for result in wmgtss_qa.get_users_by_role("student")]
 
 
 @dataclass
@@ -49,20 +64,24 @@ class Question:
     publishable: bool
 
     @staticmethod
-    def get_public_questions():
-        return [Question(*result) for result in wmgtss_qa.get_published_posts()]
+    def get_class_questions(class_id):
+        return [pc(Question, result) for result in wmgtss_qa.get_posts_by_class(class_id)]
 
     @staticmethod
-    def get_class_questions(class_id):
-        return [Question(*result) for result in wmgtss_qa.get_posts_by_class(class_id)]
+    def get_public_questions(classes):
+        all_questions = []
+        for course in classes:
+            all_questions += Question.get_class_questions(course)
+
+        return all_questions
 
     @staticmethod
     def get_private_questions(user_id):
-        return [Question(*result) for result in wmgtss_qa.get_posts_by_user(user_id)]
+        return [pc(Question, result) for result in wmgtss_qa.get_posts_by_user(user_id)]
 
     @staticmethod
     def get_question_by_id(question_id):
-        return Question(*wmgtss_qa.get_post(question_id))
+        return pc(Question, wmgtss_qa.get_post(question_id))
 
 
 @dataclass
@@ -76,7 +95,7 @@ class Comment:
 
     @staticmethod
     def get_post_comments(post_id):
-        comments = [{'object': result, 'level': 0} for result in wmgtss_qa.get_post_comments(post_id)]
+        comments = [{'object': pc(Comment, result), 'level': 0} for result in wmgtss_qa.get_post_comments(post_id)]
 
         for comment in comments:
 

@@ -8,8 +8,17 @@ CREATE ROLE web_client WITH
 	LOGIN
 ;
 
+GRANT
+	SELECT,
+	INSERT
+ON ALL TABLES IN SCHEMA
+	public
+TO
+	web_client
+;
+
 CREATE ROLE administrator WITH
-	NOSUPERUSER
+	SUPERUSER
 	NOCREATEDB
 	NOCREATEROLE
 	NOINHERIT
@@ -27,7 +36,7 @@ CREATE TABLE "courses" (
 	"course_name" VARCHAR(256) NOT NULL,
 	"course_start" DATE,
 	"course_end" DATE,
-	CHECK ("course_start" < "course_end")
+	CHECK ("course_start" < "course_end" OR "course_end" = NULL)
 );
 
 CREATE TABLE "users" (
@@ -57,7 +66,7 @@ CREATE TABLE "posts" (
 	"course_id" INTEGER NOT NULL,
 	"author_id" INTEGER NOT NULL,
 	"post_title" VARCHAR(512) NOT NULL,
-	"post_description" VARCHAR(2048) DEFAULT EMPTY,
+	"post_description" VARCHAR(2048),
 	"post_answer" VARCHAR(2048),
 	"post_created" DATE DEFAULT CURRENT_DATE,
 	"post_published" BOOLEAN DEFAULT FALSE,
@@ -80,8 +89,8 @@ CREATE TABLE "comments" (
 -- ROLES
 
 INSERT INTO
-	"roles"
+	"roles"("role_name", "role_elevated")
 VALUES
-	('Student'),
-	('Teacher', TRUE),
-	('Moderator', TRUE);
+	('student', FALSE),
+	('teacher', TRUE),
+	('moderator', TRUE);

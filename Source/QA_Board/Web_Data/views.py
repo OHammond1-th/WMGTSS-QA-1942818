@@ -1,5 +1,5 @@
 from flask import Blueprint, request, redirect, url_for, render_template
-from flask_login import login_required, login_user
+from flask_login import login_required, login_user, current_user
 from werkzeug.security import check_password_hash
 from .models import Question, User, Comment
 
@@ -24,7 +24,8 @@ def login():
             if correct_password:
 
                 login_user(user)
-                return redirect(url_for("views.question_list"))
+                print(current_user)
+                return redirect(request.args.get('next') or url_for("views.question_list"))
 
         return render_template("login.html", failed=True)
 
@@ -40,8 +41,8 @@ def home():
 @views.route('/Questions')
 @login_required
 def question_list():
-    questions_public = Question.get_public_questions()
-    questions_private = Question.get_private_questions()
+    questions_public = Question.get_public_questions(current_user.get_classes())
+    questions_private = Question.get_private_questions(Question.get_private_questions(current_user.get_id()))
 
     return render_template("question_list.html",
                            public_questions=questions_public,
