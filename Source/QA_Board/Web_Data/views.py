@@ -24,7 +24,6 @@ def login():
             if correct_password:
 
                 login_user(user)
-                print(current_user)
                 return redirect(request.args.get('next') or url_for("views.question_list"))
 
         return render_template("login.html", failed=True)
@@ -57,14 +56,6 @@ def question_list():
                            public_questions=questions_public,
                            private_questions=questions_private
                            )
-
-
-@views.route('/Questions', methods=['POST'])
-@login_required
-def question_list_post():
-    _id = request.form.get("post_id")
-    if _id:
-        return redirect(url_for('views.question_page', question_id=_id))
 
 
 @views.route('/Questions/<int:question_id>')

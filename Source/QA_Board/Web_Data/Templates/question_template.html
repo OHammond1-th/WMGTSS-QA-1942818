@@ -1,9 +1,8 @@
 <div class="container">
-    <button type="button" onclick="window.location.href='{{ url_for( 'dataTablePage' ) }}';"></button>
+    <button type="button" onclick="window.location.href='{{url_for('views.question_page', question.id)}}';"></button>
     <div class="title">{{ question.title }}</div>
     {% if question.answered %}
     <div class="check"></div>
     {% endif %}
-    <div class="desc">{{ question.description }}</div>
-    <div class="date">{{ question.date_created</div>
 </div>
+

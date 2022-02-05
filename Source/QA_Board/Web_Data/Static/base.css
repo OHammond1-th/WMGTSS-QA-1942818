@@ -14,10 +14,107 @@ body {
 }
 
 .logo-sml {
-    height: 20%;
-    width: 20%
+    height: 7%;
+    width: 7%
 }
 
 .nav-link {
-  display: -webkit-inline-box;
+    display: -webkit-inline-box;
+}
+
+.question-tabs {
+    box-sizing: content-box;
+}
+
+/* -- The CSS beyond this point is to handle the question form -- */
+
+.clear {
+  clear: both;
+}
+
+.question {
+  max-width: 30%;
+}
+
+.js-hiddenform {
+  display: none;
+}
+
+.section-title {
+  font-family: helvetica;
+  font-weight: 100;
+  font-size: 30px;
+  color: #2badd9;
+  margin-bottom: 0px;
+}
+
+.half-width {
+  width: 50%;
+  float: left;
+}
+
+.label {
+  display: none;
+}
+
+.form-field {
+  color: #000;
+  width: calc(100% - 20px);
+  padding: 10px 0 10px 10px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  -webkit-box-shadow: inset 0 0 3px #c5c5c5;
+  box-shadow: inset 0 0 3px #c5c5c5;
+  border: 0px;
+  margin-bottom: 10px;
+}
+
+.form-field::-webkit-input-placeholder {
+  color: #c5c5c5;
+}
+.form-field:-moz-placeholder {
+  color: #c5c5c5;
+}
+.form-field::-moz-placeholder {
+  color: #c5c5c5;
+}
+.form-field:-ms-input-placeholder {
+  color: #c5c5c5;
+}
+
+.form-field:focus {
+  border-color: #66afe9;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, 0.6);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, 0.6);
+}
+
+select.form-field {
+  width: calc(100% - 10px);
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: block;
+  background: #fff url("https://www.kaptest.com/static/img/blue-down-arrow.png") no-repeat 98% center;
+}
+
+.submit {
+  padding: 3px 20px;
+  height: 32px;
+  border-radius: 3px;
+  background: #2badd9;
+  border: 1px solid #2badd9;
+  border-color: #2badd9;
+  cursor: pointer;
+  color: #fff;
+}
+
+.submit:hover {
+	color:#2badd9;
+	background: #fff;
+}
+
+label {
+    font: 1rem 'Fira Sans', sans-serif;
+    color: #fff;
 }
