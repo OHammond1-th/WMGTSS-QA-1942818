@@ -1,7 +1,7 @@
 from flask import Blueprint, request, redirect, url_for, render_template
 from flask_login import login_required, login_user, logout_user, current_user
 from werkzeug.security import check_password_hash
-from .models import Question, User, Comment
+from .models import Course, User, Question, Comment
 
 views = Blueprint('views', __name__)
 
@@ -63,9 +63,11 @@ def question_list():
 def question_page(question_id):
 
     question = Question.get_question_by_id(question_id)
+    course = Course.get_by_id(question.course)
+    author = User.get_by_id(question.author)
     comments = Comment.get_post_comments(question_id)
 
     if question:
-        return render_template("question_page.html", question=question, comments=comments)
+        return render_template("question_page.html", question=question, author=author, comments=comments, course=course)
     else:
         return redirect(url_for("views.question_list"))

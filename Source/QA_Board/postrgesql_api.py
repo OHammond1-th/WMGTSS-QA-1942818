@@ -1,4 +1,5 @@
 import psycopg2 as psql
+from psycopg2 import extras as psqx
 import sys
 
 
@@ -8,6 +9,14 @@ class DB_API:
         self.database = psql.connect(f"dbname='{dbname}' user='{user}' password='{password}'")
         self.cursor = self.database.cursor()
         self.result_buffer = None
+
+    def set_cursor_tuple(self):
+        self.database.commit()
+        self.cursor = self.database.cursor()
+
+    def set_cursor_dict(self):
+        self.database.commit()
+        self.cursor = self.cursor(cursor_factory=psqx.DictCursor)
 
     def query(self, query):
         try:

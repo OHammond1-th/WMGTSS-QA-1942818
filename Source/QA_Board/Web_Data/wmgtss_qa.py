@@ -12,6 +12,10 @@ def query_table(table, columns="*", constraints=""):
         return None
 
 
+def get_course_by_id(course_id):
+    return query_table('courses', '*', f"WHERE courses.course_id = '{course_id}'")
+
+
 def get_user(user_id):
     return query_table('users', '*', f"WHERE users.user_id = '{user_id}'")
 

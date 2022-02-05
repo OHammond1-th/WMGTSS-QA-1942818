@@ -15,6 +15,16 @@ def protect_construct(class_type, arguments):
 
 pc = protect_construct
 
+@dataclass
+class Course:
+    ident: int
+    name: str
+    start: dt.datetime
+    end: dt.datetime
+
+    @staticmethod
+    def get_by_id(course_id):
+        return pc(Course, wmgtss_qa.get_course_by_id(course_id))
 
 @dataclass
 class User(UserMixin):
@@ -51,6 +61,8 @@ class User(UserMixin):
 class Question:
 
     ident: int
+    course: int
+    author: int
     title: str
     description: str
     answer: str
@@ -81,26 +93,23 @@ class Question:
 
 @dataclass
 class Comment:
-    id: int
+    ident: int
     post: int
     author: int
     parent_comment: int
     description: str
     date_created: dt.datetime
 
+    children = {}
+
     @staticmethod
     def get_post_comments(post_id):
-        comments = [{'object': pc(Comment, result), 'level': 0} for result in wmgtss_qa.get_post_comments(post_id)]
+        comments = [pc(Comment, result) for result in wmgtss_qa.get_post_comments(post_id)]
+        ref_list = {comment.ident: comment for comment in comments}
 
         for comment in comments:
+            if comment.parent_comment:
+                ref_list[str(comment.parent_comment)].children[]
 
-            if comment['object'].parent_comment is None:
-                break
-
-            for parent in comments:
-
-                if parent['object'].id == comment['object'].parent_comment:
-                    comment['level'] = parent['level'] + 1
-                    break
 
         return comments
