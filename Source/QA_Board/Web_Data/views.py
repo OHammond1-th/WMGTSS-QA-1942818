@@ -1,5 +1,5 @@
 from flask import Blueprint, request, redirect, url_for, render_template
-from flask_login import login_required, login_user, current_user
+from flask_login import login_required, login_user, logout_user, current_user
 from werkzeug.security import check_password_hash
 from .models import Question, User, Comment
 
@@ -35,6 +35,15 @@ def login():
 
 @views.route('/')
 def home():
+    return redirect(url_for('views.login'))
+
+
+@views.route('/Logout')
+@login_required
+def logout():
+
+    logout_user()
+
     return redirect(url_for('views.login'))
 
 

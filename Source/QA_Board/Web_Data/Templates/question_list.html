@@ -1,13 +1,15 @@
 {% extends "base.html" %}
 {% block static_content %}
-    <div class="container">
-        <div class="left">
-            <button id="ShowPub"> Published </button>
-        </div>
-        <div class="right">
-            <button id="ShowPri"> Private </button>
-        </div>
-    </div>
+<div class="rounded-lg">
+    <ul class="nav nav-tabs nav-fill">
+        <li class="flex-lg-fill nav-item" id="pub-button">
+            <button class="btn-lg btn-block" id="ShowPub"> Published </button>
+        </li>
+        <li class="flex-lg-fill nav-item" id="pri-button">
+            <button class="btn-lg btn-block" id="ShowPri"> Private </button>
+        </li>
+    </ul>
+</div>
 {% endblock %}
 {% block scroll_content %}
     <div class="container">
