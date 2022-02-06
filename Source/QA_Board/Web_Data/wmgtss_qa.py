@@ -12,9 +12,21 @@ def select_from_table(table, columns="*", constraints=""):
         return None
 
 
-def insert_into_table(table, columns="*", values=""):
+def insert_into_table(table, columns, values):
     try:
-        database.query(f"INSERT INTO {table}({columns}) VALUES ({values}) RETURNING {table[:-1]}_id")
+        return database.query(f"INSERT INTO {table}({columns}) VALUES ({values}) RETURNING {table[:-1]}_id")
+    except psql.Error:
+        return None
+
+
+def update_table_row(table, columns: list, values: list, primary_key):
+    if len(columns) != len(values):
+        return False
+
+    col_vals = "".join([f"{column} = {value},\n" for column, value in zip(columns, values)])
+
+    try:
+        database.query(f"UPDATE {table} SET {col_vals} WHERE {table[:-1]}_id = {primary_key}")
         return True
     except psql.Error:
         return False

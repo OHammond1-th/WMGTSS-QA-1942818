@@ -36,9 +36,21 @@ class User(UserMixin):
     password: str
     firstname: str
     lastname: str
-    date_of_birth: dt.datetime
-    last_interaction: dt.datetime
-    created: dt.datetime
+    date_of_birth: dt.date
+    last_interaction: dt.date
+    created: dt.date
+
+    def update_interaction(self):
+        self.last_interaction = dt.datetime.today().date()
+        return wmgtss_qa.update_table_row("users", ["user_interacted_last"], [self.last_interaction], self.ident)
+
+    def hasnt_interacted_today(self):
+        today = dt.date.today()
+        time_period = today - self.last_interaction
+
+        if time_period.days > 1:
+            return True
+        return False
 
     def get_id(self):
         return str(self.ident)

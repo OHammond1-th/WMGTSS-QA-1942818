@@ -3,19 +3,16 @@ from sys import argv
 from os.path import exists
 import re
 
-database = None
+database = DB_API("WMGTSS_QA", "administrator", "default")
 
 
-def create_course(name, start, end=None):
-
-    if end:
-        end = str(end)
+def create_course(course, user):
 
     database.query(
         f" INSERT INTO "
-        f" courses(course_name, course_start, course_end) "
+        f" enrollments(course_id, user_id) "
         f" VALUES "
-        f" ({name}, {start}, {end}) "
+        f" ({course}, {user}) "
     )
 
 
@@ -42,8 +39,6 @@ def query_from_file(file_path):
 
 
 if __name__ == "__main__":
-
-    database = DB_API("WMGTSS_QA", "administrator", "default")
 
     if exists(argv[0]):
         query_from_file(argv[0])

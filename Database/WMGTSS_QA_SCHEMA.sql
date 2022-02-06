@@ -10,6 +10,7 @@ CREATE ROLE web_client WITH
 
 GRANT
 	SELECT,
+	UPDATE,
 	INSERT
 ON ALL TABLES IN SCHEMA
 	public
@@ -23,6 +24,14 @@ CREATE ROLE administrator WITH
 	NOCREATEROLE
 	NOINHERIT
 	LOGIN
+;
+
+CREATE USER wmg_admin WITH
+	LOGIN
+	SUPERUSER
+	CREATEDB
+	CREATEROLE
+	PASSWORD 'warwickuni22'
 ;
 
 CREATE TABLE "roles" (
@@ -69,6 +78,7 @@ CREATE TABLE "posts" (
 	"post_description" VARCHAR(2048),
 	"post_answer" VARCHAR(2048),
 	"post_created" DATE DEFAULT CURRENT_DATE,
+	"post_publishable" BOOLEAN NOT NULL,
 	"post_published" BOOLEAN DEFAULT FALSE,
 	constraint "fk_course_id" foreign key ("course_id") REFERENCES "courses"("course_id"),
 	constraint "fk_author_id" foreign key ("author_id") REFERENCES "users"("user_id")

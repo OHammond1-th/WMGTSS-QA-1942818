@@ -68,9 +68,10 @@ def question_list():
 
         print(f"{title}|{description}|{course}|{publishable}")
 
-        if title and description and course and publishable:
+        if title and description and course and publishable and current_user.hasnt_interacted_today():
             question_id = str(Question.create_question(course, current_user.ident, title, description, publishable))
 
+            current_user.update_interaction()
             return redirect(url_for('views.question_page') + f'/{question_id}')
 
         flash("Submission failed due to missing field")
