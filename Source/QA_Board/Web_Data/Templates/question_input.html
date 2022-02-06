@@ -2,12 +2,12 @@
 
     <div class="form-container">
 
-        <form action="#" class="" id="title-form" method="post">
-            <div>
-                <input type="text" id="title" size="50" value="" class="form-field js-expand" placeholder="Whats your question?">
+        <form id="title-form" method="post">
+            <div class="form-group">
+                <input type="text" id="title" name="title" size="50" value="" class="form-field js-expand" placeholder="Whats your question?">
 
                 <div class="dropdown" id="course">
-                    <input type="hidden" id="selected-course" value="">
+                    <input type="hidden" id="selected-course" name="selected-course" value="">
                     <button class="btn btn-secondary dropdown-toggle" type="button" id="course-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Course
                     </button>
@@ -21,14 +21,14 @@
             <div class="js-hiddenform">
 
                 <label class="label" for="description"></label>
-                <input type="text" id="description" size="30" value="" required="" class="form-field" placeholder="Any more detail?">
+                <input type="text" id="description" name="description" size="30" value="" required="" class="form-field" placeholder="Any more detail?">
 
                 <div class="clear"></div>
 
                 <input id="submit" class="submit js-expand" type="submit" value="Submit Question">
 
                 <div id="public">
-                    <input class="public js-expand" type="checkbox">
+                    <input class="public js-expand" id="publishable" name="publishable" type="checkbox">
                     <label for="public">Make this publishable?</label>
                 </div>
             </div>

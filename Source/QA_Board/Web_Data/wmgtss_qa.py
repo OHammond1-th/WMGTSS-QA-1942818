@@ -14,7 +14,7 @@ def select_from_table(table, columns="*", constraints=""):
 
 def insert_into_table(table, columns="*", values=""):
     try:
-        database.query(f"INSERT INTO {table}({columns}) VALUES ({values})")
+        database.query(f"INSERT INTO {table}({columns}) VALUES ({values}) RETURNING {table[:-1]}_id")
         return True
     except psql.Error:
         return False

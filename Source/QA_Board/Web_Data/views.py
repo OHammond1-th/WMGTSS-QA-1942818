@@ -1,4 +1,4 @@
-from flask import Blueprint, request, redirect, url_for, render_template
+from flask import Blueprint, request, redirect, url_for, render_template, flash
 from flask_login import login_required, login_user, logout_user, current_user
 from werkzeug.security import check_password_hash
 from .models import Course, User, Question, Comment
@@ -61,13 +61,23 @@ def question_list():
                                )
 
     if request.method == 'POST':
-        course = request.form['course']
         title = request.form['title']
         description = request.form['description']
+        course = request.form['selected-course']
+        publishable = True if request.form.get('publishable') == "on" else False
+
+        print(f"{title}|{description}|{course}|{publishable}")
+
+        if title and description and course and publishable:
+            question_id = str(Question.create_question(course, current_user.ident, title, description, publishable))
+
+            return redirect(url_for('views.question_page') + f'/{question_id}')
+
+        flash("Submission failed due to missing field")
+        return redirect(url_for("views.question_list"))
 
     else:
         return "<h1>405: Method not allowed.</h1>"
-
 
 
 @views.route('/Questions/<int:question_id>')
