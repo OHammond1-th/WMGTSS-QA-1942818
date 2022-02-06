@@ -15,6 +15,7 @@ def protect_construct(class_type, arguments):
 
 pc = protect_construct
 
+
 @dataclass
 class Course:
     ident: int
@@ -25,6 +26,7 @@ class Course:
     @staticmethod
     def get_by_id(course_id):
         return pc(Course, wmgtss_qa.get_course_by_id(course_id))
+
 
 @dataclass
 class User(UserMixin):
@@ -71,6 +73,10 @@ class Question:
     publishable: bool
 
     @staticmethod
+    def create_question(course_id, author_id, title, description, publishable):
+        return wmgtss_qa.insert_into_posts(course_id, author_id, title, description, publishable)
+
+    @staticmethod
     def get_class_questions(class_id):
         return [pc(Question, result) for result in wmgtss_qa.get_posts_by_class(class_id)]
 
@@ -100,16 +106,31 @@ class Comment:
     description: str
     date_created: dt.datetime
 
-    children = {}
+    children = []
+
+    @staticmethod
+    def create_comment(post_id, author_id, description, parent_id=None):
+        return wmgtss_qa.insert_into_comments(post_id, author_id, description, parent_id)
 
     @staticmethod
     def get_post_comments(post_id):
         comments = [pc(Comment, result) for result in wmgtss_qa.get_post_comments(post_id)]
-        ref_list = {comment.ident: comment for comment in comments}
+        comment_tree = []
 
         for comment in comments:
-            if comment.parent_comment:
-                ref_list[str(comment.parent_comment)].children[]
+            if comment.parent_comment is None:
+                comment.children = comment.get_comment_children(comments)
+                comment_tree.append(comment)
 
+        return comment_tree
 
-        return comments
+    def get_comment_children(self, comment_list):
+
+        children = []
+
+        for comment in comment_list:
+            if comment.parent_comment == self.ident:
+                comment.children = comment.get_comment_children(comment_list)
+                children.append(comment)
+
+        return children

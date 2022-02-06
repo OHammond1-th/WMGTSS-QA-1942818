@@ -2,8 +2,22 @@
 
     <div class="form-container">
 
-        <form action="#" class="" id="title-form">
-            <input type="text" id="title" size="50" value="" class="form-field js-expand" placeholder="Whats your question?">
+        <form action="#" class="" id="title-form" method="post">
+            <div>
+                <input type="text" id="title" size="50" value="" class="form-field js-expand" placeholder="Whats your question?">
+
+                <div class="dropdown" id="course">
+                    <input type="hidden" id="selected-course" value="">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="course-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Course
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="course-dropdown">
+                        {% for class in courses %}
+                            <button class="dropdown-item" id="class-{{ class.ident }}">{{ class.name }}</button>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
             <div class="js-hiddenform">
 
                 <label class="label" for="description"></label>
@@ -12,9 +26,11 @@
                 <div class="clear"></div>
 
                 <input id="submit" class="submit js-expand" type="submit" value="Submit Question">
-                <input id="public" class="public js-expand" type="checkbox">
-                <label for="public">Make this publishable?</label>
 
+                <div id="public">
+                    <input class="public js-expand" type="checkbox">
+                    <label for="public">Make this publishable?</label>
+                </div>
             </div>
         </form>
 

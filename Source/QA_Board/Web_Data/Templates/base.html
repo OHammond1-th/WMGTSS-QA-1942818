@@ -10,10 +10,12 @@
 </head>
 <body>
     <nav class="navbar header">
-        <div class="logo-sml">
+        <div class="nav-item logo-sml">
             <img src="{{url_for('static', filename='Resources/WMG_small.png')}}">
         </div>
-        {% include "question_input.html" %}
+        <div class="nav-item">
+            {% block nav_bar %} {% endblock %}
+        </div>
         <li class="nav-item">
             <a class="btn-lg btn-dark nav-link white" id="base-logout" href="{{url_for('views.logout')}}">Logout</a>
         </li>

@@ -1,9 +1,25 @@
+# Recursive macro to unravel comment tree
+{% macro display_comment_tree(parent) %}
+{% for child in parent.children %}
+    <div class="card">
+        <div class="card-body">
+            <p class="card-text"> {{child.description}} </p>
+            <p class="text-muted"> {{child.date_created}} </p>
+        </div>
+        <div class="card-footer">
+            {{ display_comment_tree(child) }}
+        </div>
+    </div>
+{% endfor %}
+{% endmacro %}
+
+
 <div class="card">
     <div class="card-body">
         <p class="card-text"> {{comment.description}} </p>
         <p class="text-muted"> {{comment.date_created}} </p>
     </div>
     <div class="card-footer">
-        2 days ago
+        {{ display_comment_tree(comment) }}
     </div>
 </div>

@@ -46,16 +46,28 @@ def logout():
     return redirect(url_for('views.login'))
 
 
-@views.route('/Questions')
+@views.route('/Questions', methods=['GET', 'POST'])
 @login_required
 def question_list():
-    questions_public = Question.get_public_questions(current_user.get_classes())
-    questions_private = Question.get_private_questions(current_user.get_id())
+    if request.method == 'GET':
+        courses = current_user.get_classes()
+        questions_public = Question.get_public_questions(courses)
+        questions_private = Question.get_private_questions(current_user.get_id())
 
-    return render_template("question_list.html",
-                           public_questions=questions_public,
-                           private_questions=questions_private
-                           )
+        return render_template("question_list.html",
+                               courses=courses,
+                               public_questions=questions_public,
+                               private_questions=questions_private
+                               )
+
+    if request.method == 'POST':
+        course = request.form['course']
+        title = request.form['title']
+        description = request.form['description']
+
+    else:
+        return "<h1>405: Method not allowed.</h1>"
+
 
 
 @views.route('/Questions/<int:question_id>')
