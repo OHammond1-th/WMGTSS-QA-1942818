@@ -3,10 +3,15 @@ from sys import argv
 from os.path import exists
 import re
 
-database = DB_API("WMGTSS_QA", "administrator", "default")
+database = None
 
 
-def create_course(course, user):
+def set_database(cur_database):
+    global database
+    database = cur_database
+
+
+def create_new_enrollment(course, user):
 
     database.query(
         f" INSERT INTO "
@@ -39,6 +44,8 @@ def query_from_file(file_path):
 
 
 if __name__ == "__main__":
+
+    database = DB_API("WMGTSS_QA", "administrator", "default")
 
     if exists(argv[0]):
         query_from_file(argv[0])

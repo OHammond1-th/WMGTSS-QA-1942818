@@ -6,7 +6,12 @@ import re
 database = None
 
 
-def create_course(name, start, end=None):
+def set_database(cur_database):
+    global database
+    database = cur_database
+
+
+def create_new_course(name, start, end=None):
 
     if end:
         end = str(end)

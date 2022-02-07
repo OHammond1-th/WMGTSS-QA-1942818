@@ -4,7 +4,12 @@ from postrgesql_api import DB_API
 from sys import argv
 from os.path import exists
 
-database = DB_API("WMGTSS_QA", "administrator", "default")
+database = None
+
+
+def set_database(cur_database):
+    global database
+    database = cur_database
 
 
 def get_role_id(role):
@@ -12,7 +17,7 @@ def get_role_id(role):
     return database.get_result(1)[0]
 
 
-def create_user(role, username, firstname, lastname, dob, password=None):
+def create_new_user(role, username, firstname, lastname, dob, password=None):
 
     if password:
         password = str(password)
@@ -49,6 +54,8 @@ def query_from_file(file_path):
 
 
 if __name__ == "__main__":
+
+    database = DB_API("WMGTSS_QA", "administrator", "default")
 
     if exists(argv[1]):
         query_from_file(argv[1])
