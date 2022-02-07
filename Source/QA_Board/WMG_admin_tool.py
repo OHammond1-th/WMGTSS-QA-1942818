@@ -11,37 +11,39 @@ import enroll_user
 
 print(f"{pathlib.Path().resolve()}\\Images\\WMG.png")
 
-class CreateUserForm(tk.Frame):
+class CreateUserForm(tk.Toplevel):
 
     def __init__(self, root, role, **kw):
-        super().__init__(**kw)
+        super().__init__(root, **kw)
+
+        self.root = root
 
         self.role = role
         self.user_data = []
 
         username = tk.StringVar()
-        self.username_label = tk.Label(root, text="{role} username").pack()
-        self.username_entry = tk.Entry(root, textvariable=username).pack()
+        username_label = tk.Label(self, text=f"{role} username").pack()
+        username_entry = tk.Entry(self, textvariable=username).pack()
         self.user_data.append(username)
 
         firstname = tk.StringVar()
-        self.firstname_label = tk.Label(root, text="{role} firstname").pack()
-        self.firstname_entry = tk.Entry(root, textvariable=firstname).pack()
+        firstname_label = tk.Label(self, text=f"{role} firstname").pack()
+        firstname_entry = tk.Entry(self, textvariable=firstname).pack()
         self.user_data.append(firstname)
 
         lastname = tk.StringVar()
-        self.lastname_label = tk.Label(root, text="{role} lastname").pack()
-        self.lastname_entry = tk.Entry(root, textvariable=lastname).pack()
+        lastname_label = tk.Label(self, text=f"{role} lastname").pack()
+        lastname_entry = tk.Entry(self, textvariable=lastname).pack()
         self.user_data.append(lastname)
 
 
         day = tk.StringVar()
         month = tk.StringVar()
         year = tk.StringVar()
-        self.dateofbirth_label = tk.Label(root, text="{role} date of birth (dd/mm/yyyy)").pack()
-        self.day_entry = tk.Entry(root, textvariable=day).pack(fill=tk.X)
-        self.month_entry = tk.Entry(root, textvariable=month).pack(fill=tk.X)
-        self.year_entry = tk.Entry(root, textvariable=year).pack(fill=tk.X)
+        dateofbirth_label = tk.Label(self, text=f"{role} date of birth (dd/mm/yyyy)").pack()
+        day_entry = tk.Entry(self, textvariable=day).pack(side=tk.LEFT)
+        month_entry = tk.Entry(self, textvariable=month).pack(side=tk.LEFT)
+        year_entry = tk.Entry(self, textvariable=year).pack(side=tk.LEFT)
 
         self.dob = ({
             "day": day,
@@ -49,7 +51,13 @@ class CreateUserForm(tk.Frame):
             "year": year
         })
 
-        self.create_button = tk.Button(root, text="Create", command=self.insert_data)
+        button_frame = tk.Frame(self)
+        create_button = tk.Button(button_frame, text="Create", command=self.insert_data).pack()
+        exit_button = tk.Button(button_frame, text="Done", command=self.exit).pack()
+        button_frame.pack(side=tk.BOTTOM)
+
+        self.root.grab_set()
+
 
     def insert_data(self):
 
@@ -61,29 +69,29 @@ class CreateUserForm(tk.Frame):
 
         create_user.create_new_user(self.role, *self.user_data, dateofbirth)
 
-        self.clear_data()
-
-    def clear_data(self):
-
-        self.role = ""
+    def exit(self):
+        self.root.grab_release()
+        self.destroy()
 
 
-class CreateCourseForm(tk.Frame):
+class CreateCourseForm(tk.Toplevel):
 
     def __init__(self, root, **kw):
-        super().__init__(**kw)
+        super().__init__(root, **kw)
+
+        self.root = root
 
         self.name = tk.StringVar()
-        self.name_label = tk.Label(root, text="username").pack()
-        self.name_entry = tk.Entry(root, textvariable=self.name).pack()
+        name_label = tk.Label(self, text="Name").pack()
+        name_entry = tk.Entry(self, textvariable=self.name).pack()
 
         start_day = tk.StringVar()
         start_month = tk.StringVar()
         start_year = tk.StringVar()
-        self.start_date_label = tk.Label(root, text="start date (dd/mm/yyyy)").pack()
-        self.start_day_entry = tk.Entry(root, textvariable=start_day).pack(fill=tk.X)
-        self.start_month_entry = tk.Entry(root, textvariable=start_month).pack(fill=tk.X)
-        self.start_year_entry = tk.Entry(root, textvariable=start_year).pack(fill=tk.X)
+        start_date_label = tk.Label(self, text="Start Date (dd/mm/yyyy)").pack()
+        start_day_entry = tk.Entry(self, textvariable=start_day).pack(side=tk.LEFT)
+        start_month_entry = tk.Entry(self, textvariable=start_month).pack(side=tk.LEFT)
+        start_year_entry = tk.Entry(self, textvariable=start_year).pack(side=tk.LEFT)
 
         self.start_date = ({
             "day": start_day,
@@ -94,10 +102,10 @@ class CreateCourseForm(tk.Frame):
         end_day = tk.StringVar()
         end_month = tk.StringVar()
         end_year = tk.StringVar()
-        self.end_date_label = tk.Label(root, text="end date (dd/mm/yyyy)").pack()
-        self.end_day_entry = tk.Entry(root, textvariable=end_day).pack(fill=tk.X)
-        self.end_month_entry = tk.Entry(root, textvariable=end_month).pack(fill=tk.X)
-        self.end_year_entry = tk.Entry(root, textvariable=end_year).pack(fill=tk.X)
+        end_date_label = tk.Label(self, text="End Date (dd/mm/yyyy)").pack()
+        end_day_entry = tk.Entry(self, textvariable=end_day).pack(side=tk.LEFT)
+        end_month_entry = tk.Entry(self, textvariable=end_month).pack(side=tk.LEFT)
+        end_year_entry = tk.Entry(self, textvariable=end_year).pack(side=tk.LEFT)
 
         self.end_date = ({
             "day": end_day,
@@ -105,7 +113,12 @@ class CreateCourseForm(tk.Frame):
             "year": end_year
         })
 
-        self.create_button = tk.Button(root, text="Create", command=self.insert_data)
+        button_frame = tk.Frame(self)
+        create_button = tk.Button(button_frame, text="Create", command=self.insert_data).pack()
+        exit_button = tk.Button(button_frame, text="Done", command=self.exit).pack()
+        button_frame.pack(side=tk.BOTTOM)
+
+        self.root.grab_set()
 
     def insert_data(self):
 
@@ -123,6 +136,8 @@ class CreateCourseForm(tk.Frame):
 
         create_course.create_new_course(self.name, start_date, end_date)
 
+    def exit(self):
+        self.root.grab_release()
         self.destroy()
 
 
@@ -130,6 +145,8 @@ class AdminTool(tk.Tk):
 
     def __init__(self):
         super().__init__("WMG admin")
+
+        self.geometry("1000x1000")
 
         self.database = None
         self.connection_status = tk.StringVar()
@@ -178,6 +195,10 @@ class AdminTool(tk.Tk):
 
     def admin_dashboard(self):
 
+        add_student = tk.Button(self, text="Add Students", command=lambda: CreateUserForm(self, "student")).pack()
+        add_teacher = tk.Button(self, text="Add Teacher", command=lambda: CreateUserForm(self, "teacher")).pack()
+        add_moderator = tk.Button(self, text="Add Moderator", command=lambda: CreateUserForm(self, "moderator")).pack()
+        add_course = tk.Button(self, text="Add Course", command=lambda: CreateCourseForm(self)).pack()
 
 
 if __name__ == "__main__":
