@@ -12,19 +12,20 @@
             <button class="btn-lg btn-block" id="ShowPri"> Private </button>
         </li>
     </ul>
+    <input type="text" id="search-bar" placeholder="Search for a question">
 </div>
 {% endblock %}
 {% block scroll_content %}
     <div class="container">
-        <div class="published" id="ques-pub">
+        <ul class="published" id="ques-pub">
             {% for question in public_questions %}
                 {% include "question_template.html" %}
             {% endfor %}
-        </div>
-        <div class="personal" id="ques-pri">
+        </ul>
+        <ul class="personal" id="ques-pri">
             {% for question in private_questions %}
                 {% include "question_template.html" %}
             {% endfor %}
-        </div>
+        </ul>
     </div>
 {% endblock %}

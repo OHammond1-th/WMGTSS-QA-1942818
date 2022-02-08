@@ -23,10 +23,19 @@ def update_table_row(table, columns: list, values: list, primary_key):
     if len(columns) != len(values):
         return False
 
+    # Create the list of columns and changes we would like to make
     col_vals = "".join([f"{column} = {value},\n" for column, value in zip(columns, values)])
 
     try:
         database.query(f"UPDATE {table} SET {col_vals} WHERE {table[:-1]}_id = {primary_key}")
+        return True
+    except psql.Error:
+        return False
+
+
+def delete_from_table(table, _id):
+    try:
+        database.query(f"DELETE FROM {table} WHERE {table}.{table[:-1]}_id = {_id}")
         return True
     except psql.Error:
         return False
@@ -46,7 +55,16 @@ def get_user_by_username(username):
 
 def get_users_by_role(role):
     return select_from_table('users', '*', f"OUTER JOIN roles AT roles.role_id = users.role_id"
-                             f" WHERE roles.role_name = '{role.lower()}'")
+                                           f" WHERE roles.role_name = '{role.lower()}'")
+
+
+def get_users_enrollments(user_id):
+    return select_from_table('enrollments', 'course_id', f"WHERE enrollments.user_id = '{user_id}'")
+
+
+def get_user_elevation(user_id):
+    return select_from_table('users', 'roles.role_elevated', f"OUTER JOIN roles AT roles.role_id = users.role_id "
+                                                             f"WHERE users.user_id = {user_id}")
 
 
 def get_published_posts():
@@ -69,10 +87,6 @@ def get_post(post_id):
     return select_from_table('posts', '*', f"WHERE posts.post_id = '{post_id}'")
 
 
-def get_users_enrollments(user_id):
-    return select_from_table('enrollments', 'course_id', f"WHERE enrollments.user_id = '{user_id}'")
-
-
 def insert_into_posts(course_id, author_id, title, description, publishable):
     return insert_into_table('posts', 'course_id, author_id, post_title, post_description, post_publishable',
                              f'{course_id}, {author_id}, {title}, {description}, {publishable}')
@@ -81,3 +95,12 @@ def insert_into_posts(course_id, author_id, title, description, publishable):
 def insert_into_comments(post_id, author_id, description, parent_id=None):
     return insert_into_table('comments', 'post_id, author_id, parent_id, comment_description',
                              f'{post_id}, {author_id}, {parent_id}, {description}')
+
+
+def update_question_with_answer(question_id, answer):
+    return update_table_row('questions', ['question_answer'], [answer], question_id)
+
+
+def delete_from_questions(question_id):
+    return delete_from_table('questions', question_id)
+

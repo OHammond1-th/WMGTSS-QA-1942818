@@ -134,7 +134,7 @@ class CreateCourseForm(tk.Toplevel):
             int(self.end_date["day"].get())
         )
 
-        create_course.create_new_course(self.name, start_date, end_date)
+        create_course.create_new_course(self.name.get(), start_date, end_date)
 
     def exit(self):
         self.root.grab_release()
@@ -146,11 +146,18 @@ class AdminTool(tk.Tk):
     def __init__(self):
         super().__init__("WMG admin")
 
-        self.geometry("1000x1000")
+        self.geometry("500x700")
+
+        # Setup list-boxes
+        self.course_list = None
+        self.user_list = None
+        self.enrollment_list = []
 
         self.database = None
         self.connection_status = tk.StringVar()
         self.password = tk.StringVar()
+
+        self.enrollment_window = None
 
         self.withdraw()
         self.login_window = None
@@ -163,18 +170,18 @@ class AdminTool(tk.Tk):
     def login(self):
         self.login_window = tk.Toplevel(self)
         self.login_window.title("WMG Login")
-        self.login_window.geometry("500x150")
+        self.login_window.geometry("1000x400")
 
-        logo_canvas = tk.Canvas(self, width=300, height=300)
-        logo_img = tk.PhotoImage(file=f"{pathlib.Path().resolve()}/Images/WMG.png")
-        logo_canvas.create_image(20, 20, anchor="nw", image=logo_img)
+        logo_canvas = tk.Canvas(self.login_window, width=900, height=300)
+        self.logo_img = tk.PhotoImage(file=f"{pathlib.Path().resolve()}/Images/WMG.png")
+        logo_canvas.create_image(20, 20, anchor="nw", image=self.logo_img)
         logo_canvas.pack()
 
-        password_label = tk.Label(self.login_window, text="Password * ").pack()
+        password_label = tk.Label(self.login_window, text="Password", font=20).pack()
 
         password_entry = tk.Entry(self.login_window, textvariable=self.password, show='*').pack()
 
-        login_button = tk.Button(self.login_window, text="Login", command=self.connect).pack()
+        login_button = tk.Button(self.login_window, text="Login", font=20, command=self.connect).pack()
 
         status_label = tk.Message(self.login_window, textvariable=self.connection_status, width=400).pack()
 
@@ -194,11 +201,30 @@ class AdminTool(tk.Tk):
             print(e)
 
     def admin_dashboard(self):
+        add_options = tk.Frame(self).pack(side=tk.TOP)
+        add_student = tk.Button(add_options, text="Add Students", command=lambda: CreateUserForm(self, "student")).pack(fill=tk.X)
+        add_teacher = tk.Button(add_options, text="Add Teacher", command=lambda: CreateUserForm(self, "teacher")).pack(fill=tk.X)
+        add_moderator = tk.Button(add_options, text="Add Moderator", command=lambda: CreateUserForm(self, "moderator")).pack(fill=tk.X)
+        add_course = tk.Button(add_options, text="Add Course", command=lambda: CreateCourseForm(self)).pack(fill=tk.X)
 
-        add_student = tk.Button(self, text="Add Students", command=lambda: CreateUserForm(self, "student")).pack()
-        add_teacher = tk.Button(self, text="Add Teacher", command=lambda: CreateUserForm(self, "teacher")).pack()
-        add_moderator = tk.Button(self, text="Add Moderator", command=lambda: CreateUserForm(self, "moderator")).pack()
-        add_course = tk.Button(self, text="Add Course", command=lambda: CreateCourseForm(self)).pack()
+        self.course_list = tk.Listbox(self)
+        self.course_list.bind('<Double-1>', lambda x: self.open_course(self.course_list.get(tk.ACTIVE), x))
+        self.course_list.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True, padx=40, pady=20)
+
+        refresh_button = tk.Button(self, text="Refresh", command=self.refresh_database).pack(fill=tk.X)
+
+    def open_course(self, course, debug):
+
+        self.enrollment_window = tk.Toplevel(self)
+        self.enrollment_window.title("Enrollments")
+        self.enrollment_window.geometry("500x500")
+
+        relevant_enrollments = [enrollment for enrollment in self.enrollment_list if int(course) == enrollment[0]]
+
+    def refresh_database(self):
+        courses = self.database.query("SELECT * FROM courses")
+        users = self.database.query("SELECT * FROM users")
+        enrollments = self.database.query("SELECT * FROM enrollments")
 
 
 if __name__ == "__main__":

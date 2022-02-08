@@ -20,7 +20,7 @@ def create_new_course(name, start, end=None):
         f" INSERT INTO "
         f" courses(course_name, course_start, course_end) "
         f" VALUES "
-        f" ({name}, {start}, {end}) "
+        f" ('{name}', '{start}', '{end}') "
     )
 
 

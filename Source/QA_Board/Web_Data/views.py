@@ -50,11 +50,13 @@ def logout():
 @login_required
 def question_list():
     if request.method == 'GET':
+        elevated = current_user.is_elevated()
         courses = current_user.get_classes()
         questions_public = Question.get_public_questions(courses)
         questions_private = Question.get_private_questions(current_user.get_id())
 
         return render_template("question_list.html",
+                               elevated=elevated,
                                courses=courses,
                                public_questions=questions_public,
                                private_questions=questions_private
@@ -94,3 +96,30 @@ def question_page(question_id):
         return render_template("question_page.html", question=question, author=author, comments=comments, course=course)
     else:
         return redirect(url_for("views.question_list"))
+
+
+@login_required
+def delete_question(question_id):
+    success = Question.delete(question_id)
+
+    if success:
+        return redirect(url_for("views.question_list"))
+
+    else:
+        return error_html()
+
+
+@login_required
+def answer_question(question_id):
+    success = Question.provide_answer(question_id, request.form[f'{question_id}-answer'])
+
+    if success:
+        return redirect(url_for("views.question_page", question_id=question_id))
+
+    else:
+        return error_html()
+
+
+def error_html():
+    return "<h1>An error occurred whilst processing the last request." \
+           "Please go back on your browser to return to site<h1>"

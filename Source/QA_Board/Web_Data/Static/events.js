@@ -1,6 +1,6 @@
 {
-    let pub_question_list = document.getElementById("ques-pub")
-    let pri_question_list = document.getElementById("ques-pri")
+    let pub_question_list = document.getElementById("ques-pub");
+    let pri_question_list = document.getElementById("ques-pri");
 
     document.getElementById("ShowPub").addEventListener("click", function()
         {
@@ -16,8 +16,9 @@
         }
     )
 }
+
 {
-    course_select_buttons = document.getElementById("course").children
+    course_select_buttons = document.getElementById("course").children;
 
     for (let option = 0; option < course_select_buttons.length; option++)
     {
@@ -30,6 +31,28 @@
         )
     }
 }
+
+{
+    search_bar = document.getElementById("search-bar");
+    search = search_bar.value.toLowerCase();
+
+    private_questions = document.getElementById("ques-pri").getElementsByTagName('li');
+    public_questions = document.getElementById("ques-pub").getElementsByTagName('li');
+
+    all_questions = private_questions.concat(public_questions);
+
+    for (let question = 0; question < all_questions.length; question++)
+    {
+        title = all_questions[question].getElementsByTagName("a")[0];
+
+        if (title.textContent.toLowerCase().indexOf(filter) > -1) {
+            all_questions[question].style.display = "";
+        } else {
+            all_questions[question].style.display = "none";
+        }
+    }
+}
+
 {
     $( document.getElementById("main-content") ).click(function() {
         $(".js-hiddenform").slideUp();

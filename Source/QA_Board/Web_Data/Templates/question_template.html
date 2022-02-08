@@ -1,8 +1,24 @@
-<div class="container">
+<li class="list-group-item card">
     <button type="button" onclick="window.location.href='{{url_for('views.question_page', question.id)}}';"></button>
-    <div class="title">{{ question.title }}</div>
+    <h4 class="title" >{{ question.title }}</h4>
     {% if question.answered %}
-    <div class="check"></div>
+    <div class="check">
+        <img src="">
+    </div>
     {% endif %}
-</div>
+    <div id="elevated-options">
+        {% if elevated %}
+            <label for="delete-{{question.id}}">Delete</label>
+            <button type="button" id="delete-{{question.id}}" onclick="window.location.href='{{url_for('views.delete_question', question.id)}}';"></button>
+            <form>
+                <input type="text"
+                       name="{{question.id}}-answer"
+                       id="{{question.id}}-answer"
+                       placeholder="Answer"
+            </form>
+            <label for="reply-{{question.id}}">Reply</label>
+            <button type="button" id="reply-{{question.id}}" onclick="window.location.href='{{url_for('views.answer_question', question.id)}}';"></button>
+    </div>
+    {% endif %}
+</li>
 

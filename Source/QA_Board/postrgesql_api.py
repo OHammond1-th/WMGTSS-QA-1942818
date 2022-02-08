@@ -32,6 +32,8 @@ class DB_API:
             print("Query failed:", e.pgerror, e)
             self.database.rollback()
 
+        return self.result_buffer
+
     def commit(self):
         self.database.commit()
 

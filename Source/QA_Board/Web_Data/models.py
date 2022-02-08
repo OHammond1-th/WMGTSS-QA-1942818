@@ -40,8 +40,14 @@ class User(UserMixin):
     last_interaction: dt.date
     created: dt.date
 
+    def is_elevated(self):
+        return wmgtss_qa.get_user_elevation(self.ident)
+
     def update_interaction(self):
-        self.last_interaction = dt.datetime.today().date()
+
+        if not self.is_elevated():
+            self.last_interaction = dt.datetime.today().date()
+
         return wmgtss_qa.update_table_row("users", ["user_interacted_last"], [self.last_interaction], self.ident)
 
     def hasnt_interacted_today(self):
@@ -107,6 +113,14 @@ class Question:
     @staticmethod
     def get_question_by_id(question_id):
         return pc(Question, wmgtss_qa.get_post(question_id))
+
+    @staticmethod
+    def provide_answer(question_id, answer):
+        return wmgtss_qa.update_question_with_answer(question_id, answer)
+
+    @staticmethod
+    def delete(question_id):
+        return wmgtss_qa.delete_from_questions(question_id)
 
 
 @dataclass

@@ -20,13 +20,13 @@ def get_role_id(role):
 def create_new_user(role, username, firstname, lastname, dob, password=None):
 
     if password:
-        password = str(password)
+        password = generate_password_hash(str(password))
 
     database.query(
         f"INSERT INTO "
         f"users(role_id, user_username, user_password, user_firstname, user_lastname, user_dateofbirth)"
         f" VALUES "
-        f"('{get_role_id(role)}', '{str(username)}', '{generate_password_hash(password)}', '{str(firstname)}', '{str(lastname)}', '{str(dob)}') "
+        f"('{get_role_id(role)}', '{str(username)}', '{password}', '{str(firstname)}', '{str(lastname)}', '{str(dob)}') "
     )
 
 
@@ -44,7 +44,7 @@ def query_from_file(file_path):
             line_args = re.split(r"(,|-|/|\s)+", line)
             line_args[0] = get_role_id(line_args[0])
 
-            create_user(*line_args)
+            create_new_user(*line_args)
 
         database.commit()
 
@@ -61,7 +61,7 @@ if __name__ == "__main__":
         query_from_file(argv[1])
 
     else:
-        create_user(*argv[1:])
+        create_new_user(*argv[1:])
 
     database.commit()
 
