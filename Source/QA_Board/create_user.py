@@ -24,8 +24,8 @@ def create_new_user(role, username, firstname, lastname, dob, password=None):
 
     database.query(
         f"INSERT INTO "
-        f"users(role_id, user_username, user_password, user_firstname, user_lastname, user_dateofbirth)"
-        f" VALUES "
+        f"users(role_id, user_username, user_password, user_firstname, user_lastname, user_dateofbirth) "
+        f"VALUES "
         f"('{get_role_id(role)}', '{str(username)}', '{password}', '{str(firstname)}', '{str(lastname)}', '{str(dob)}') "
     )
 
@@ -46,11 +46,15 @@ def query_from_file(file_path):
 
             create_new_user(*line_args)
 
-        database.commit()
+        commit()
 
     except ValueError as e:
         print(f"Args did not meet those required:\t{e}/5-6")
         database.rollback()
+
+
+def commit():
+    database.commit()
 
 
 if __name__ == "__main__":

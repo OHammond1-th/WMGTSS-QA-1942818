@@ -17,10 +17,10 @@ def create_new_course(name, start, end=None):
         end = str(end)
 
     database.query(
-        f" INSERT INTO "
-        f" courses(course_name, course_start, course_end) "
-        f" VALUES "
-        f" ('{name}', '{start}', '{end}') "
+        f"INSERT INTO "
+        f"courses(course_name, course_start, course_end) "
+        f"VALUES "
+        f"('{name}', '{start}', '{end}') "
     )
 
 
@@ -37,13 +37,17 @@ def query_from_file(file_path):
 
             line_args = re.split(r"(,|-|/|\s)+", line)
 
-            create_course(*line_args)
+            create_new_course(*line_args)
 
-        database.commit()
+        commit()
 
     except ValueError as e:
         print(f"Args did not meet those required:\t{e}/2-3")
         database.rollback()
+
+
+def commit():
+    database.commit()
 
 
 if __name__ == "__main__":
@@ -54,4 +58,4 @@ if __name__ == "__main__":
         query_from_file(argv[0])
 
     else:
-        create_course(*argv)
+        create_new_course(*argv)

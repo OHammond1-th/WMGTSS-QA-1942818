@@ -20,6 +20,7 @@ class DB_API:
 
     def query(self, query):
         try:
+            print(query)
             self.cursor.execute(query)
 
             # psycopg2 throws an error if no results are found but we just want it to set the result buffer to None

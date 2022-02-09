@@ -70,6 +70,7 @@ class CreateUserForm(tk.Toplevel):
         create_user.create_new_user(self.role, *self.user_data, dateofbirth)
 
     def exit(self):
+        create_user.commit()
         self.root.grab_release()
         self.destroy()
 
@@ -137,6 +138,7 @@ class CreateCourseForm(tk.Toplevel):
         create_course.create_new_course(self.name.get(), start_date, end_date)
 
     def exit(self):
+        create_course.commit()
         self.root.grab_release()
         self.destroy()
 
@@ -152,6 +154,8 @@ class AdminTool(tk.Tk):
         self.course_list = None
         self.user_list = None
         self.enrollment_list = []
+        self.users_enrolled = None
+        self.users_not_enrolled = None
 
         self.database = None
         self.connection_status = tk.StringVar()
@@ -186,7 +190,6 @@ class AdminTool(tk.Tk):
         status_label = tk.Message(self.login_window, textvariable=self.connection_status, width=400).pack()
 
     def connect(self):
-        print("here", self.password.get())
         try:
             self.database = DB_API("WMGTSS_QA", "wmg_admin", self.password.get())
 
@@ -215,16 +218,50 @@ class AdminTool(tk.Tk):
 
     def open_course(self, course, debug):
 
+        relevant_enrollment_user_ids = {enrollment[2] for enrollment in self.enrollment_list if course[0] == enrollment[0]}
+
         self.enrollment_window = tk.Toplevel(self)
         self.enrollment_window.title("Enrollments")
         self.enrollment_window.geometry("500x500")
 
-        relevant_enrollments = [enrollment for enrollment in self.enrollment_list if int(course) == enrollment[0]]
+        page = tk.Frame(self.enrollment_window)
+
+        self.users_not_enrolled = tk.Listbox(page)
+
+        move_to_enrolled = tk.Button(page, text="->", padx=10, pady=10,
+                                     command=lambda: self.enroll(self.users_not_enrolled.get(tk.ACTIVE)))
+
+        move_to_not_enrolled = tk.Button(page, text="<-", padx=10, pady=10,
+                                         command=lambda: self.unenroll(self.users_enrolled.get(tk.ACTIVE)))
+
+        self.users_enrolled = tk.Listbox(page)
+
+        exit_button = tk.Button(page, text="Done", command=lambda: self.compute_changes(relevant_enrollment_user_ids))
+
+        self.users_not_enrolled.grid(column=0, row=0, rowspan=2)
+        move_to_enrolled.grid(column=1, row=0)
+        move_to_not_enrolled.grid(column=1, row=1)
+        self.users_enrolled.grid(column=2, row=0, rowspan=2)
+        exit_button.grid(column=0, row=2, columnspan=3)
+
+        page.grid()
+
+        for user in self.user_list:
+            if user[0] in relevant_enrollment_user_ids:
+                self.users_enrolled.insert(tk.END, user)
+
+            else:
+                self.users_not_enrolled.insert(tk.END, user)
+
 
     def refresh_database(self):
-        courses = self.database.query("SELECT * FROM courses")
-        users = self.database.query("SELECT * FROM users")
-        enrollments = self.database.query("SELECT * FROM enrollments")
+
+        self.course_list.delete(0, tk.END)
+        [self.course_list.insert(tk.END, course) for course in self.database.query("SELECT * FROM courses")]
+
+        self.user_list = [user for user in self.database.query("SELECT * FROM users")]
+
+        self.enrollment_list = [enrollment for enrollment in self.database.query("SELECT * FROM enrollments")]
 
 
 if __name__ == "__main__":

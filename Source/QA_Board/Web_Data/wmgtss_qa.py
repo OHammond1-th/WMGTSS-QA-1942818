@@ -54,7 +54,7 @@ def get_user_by_username(username):
 
 
 def get_users_by_role(role):
-    return select_from_table('users', '*', f"OUTER JOIN roles AT roles.role_id = users.role_id"
+    return select_from_table('users', '*', f"FULL OUTER JOIN roles ON roles.role_id = users.role_id"
                                            f" WHERE roles.role_name = '{role.lower()}'")
 
 
@@ -63,7 +63,7 @@ def get_users_enrollments(user_id):
 
 
 def get_user_elevation(user_id):
-    return select_from_table('users', 'roles.role_elevated', f"OUTER JOIN roles AT roles.role_id = users.role_id "
+    return select_from_table('users', 'roles.role_elevated', f"FULL OUTER JOIN roles ON roles.role_id = users.role_id "
                                                              f"WHERE users.user_id = {user_id}")
 
 
