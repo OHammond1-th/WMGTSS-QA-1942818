@@ -39,16 +39,20 @@
     private_questions = document.getElementById("ques-pri").getElementsByTagName('li');
     public_questions = document.getElementById("ques-pub").getElementsByTagName('li');
 
-    all_questions = private_questions.concat(public_questions);
-
-    for (let question = 0; question < all_questions.length; question++)
+    if (private_questions.length && public_questions.length)
     {
-        title = all_questions[question].getElementsByTagName("a")[0];
 
-        if (title.textContent.toLowerCase().indexOf(filter) > -1) {
-            all_questions[question].style.display = "";
-        } else {
-            all_questions[question].style.display = "none";
+        all_questions = Array.prototype.push.apply(private_questions, public_questions)
+
+        for (let question = 0; question < all_questions.length; question++)
+        {
+            title = all_questions[question].getElementsByTagName("a")[0];
+
+            if (title.textContent.toLowerCase().indexOf(filter) > -1) {
+                all_questions[question].style.display = "";
+            } else {
+                all_questions[question].style.display = "none";
+            }
         }
     }
 }

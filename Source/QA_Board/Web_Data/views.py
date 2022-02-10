@@ -49,10 +49,12 @@ def logout():
 @views.route('/Questions', methods=['GET', 'POST'])
 @login_required
 def question_list():
+    courses = current_user.get_classes()
+
     if request.method == 'GET':
         elevated = current_user.is_elevated()
-        courses = current_user.get_classes()
-        questions_public = Question.get_public_questions(courses)
+        course_ids = [course.ident for course in courses]
+        questions_public = Question.get_public_questions(course_ids)
         questions_private = Question.get_private_questions(current_user.get_id())
 
         return render_template("question_list.html",
@@ -65,16 +67,17 @@ def question_list():
     if request.method == 'POST':
         title = request.form['title']
         description = request.form['description']
-        course = request.form['selected-course']
+        course_input = request.form['selected-course']
         publishable = True if request.form.get('publishable') == "on" else False
 
-        print(f"{title}|{description}|{course}|{publishable}")
+        for course in courses:
+            if course_input.strip() == course.name:
+                course_input = course.ident
 
-        if title and description and course and publishable and current_user.hasnt_interacted_today():
-            question_id = str(Question.create_question(course, current_user.ident, title, description, publishable))
-
+        if title and description and course_input and publishable is not None and current_user.hasnt_interacted_today():
+            question_id = str(Question.create_question(course_input, current_user.ident, title, description, publishable))
             current_user.update_interaction()
-            return redirect(url_for('views.question_page') + f'/{question_id}')
+            return redirect(url_for('views.question_page', question_id=question_id))
 
         flash("Submission failed due to missing field")
         return redirect(url_for("views.question_list"))
@@ -98,6 +101,7 @@ def question_page(question_id):
         return redirect(url_for("views.question_list"))
 
 
+@views.route("/Deleting/<int:question_id>")
 @login_required
 def delete_question(question_id):
     success = Question.delete(question_id)
@@ -109,6 +113,7 @@ def delete_question(question_id):
         return error_html()
 
 
+@views.route("/Answering/<int:question_id>")
 @login_required
 def answer_question(question_id):
     success = Question.provide_answer(question_id, request.form[f'{question_id}-answer'])

@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block static_content %}
 <div class="container">
+    <a href="{{url_for('views.question_list')}}">Back</a>
     <div class="meta">
         <div class="meta-text" id="post-course">
 
@@ -9,7 +10,7 @@
         </div>
         <div class="meta-text" id="post-author">
 
-            {% if question.published is True %}
+            {% if question.published is true %}
             <label>{{ author.firstname }} {{ author.lastname }}</label>
             {% else %}
             <label>Anonymous</label>

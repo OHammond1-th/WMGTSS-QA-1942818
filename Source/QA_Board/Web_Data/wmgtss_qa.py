@@ -89,12 +89,12 @@ def get_post(post_id):
 
 def insert_into_posts(course_id, author_id, title, description, publishable):
     return insert_into_table('posts', 'course_id, author_id, post_title, post_description, post_publishable',
-                             f'{course_id}, {author_id}, {title}, {description}, {publishable}')
+                             f"{course_id}, {author_id}, '{title}', '{description}', {publishable}")
 
 
 def insert_into_comments(post_id, author_id, description, parent_id=None):
     return insert_into_table('comments', 'post_id, author_id, parent_id, comment_description',
-                             f'{post_id}, {author_id}, {parent_id}, {description}')
+                             f"{post_id}, {author_id}, {parent_id}, '{description}'")
 
 
 def update_question_with_answer(question_id, answer):

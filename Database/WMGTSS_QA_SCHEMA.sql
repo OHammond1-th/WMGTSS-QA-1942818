@@ -11,10 +11,20 @@ CREATE ROLE web_client WITH
 GRANT
 	SELECT,
 	UPDATE,
-	INSERT
+	INSERT,
+	SEQUENCE
 ON ALL TABLES IN SCHEMA
 	public
 TO
+	web_client
+;
+
+GRANT 
+	USAGE,
+	SELECT 
+ON ALL SEQUENCES IN SCHEMA
+	public 
+TO 
 	web_client
 ;
 

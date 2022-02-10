@@ -7,9 +7,6 @@ import create_user
 import create_course
 import enroll_user
 
-#database = DB_API("WMGTSS_QA", "administrator", "default")
-
-print(f"{pathlib.Path().resolve()}\\Images\\WMG.png")
 
 class CreateUserForm(tk.Toplevel):
 
@@ -36,7 +33,6 @@ class CreateUserForm(tk.Toplevel):
         lastname_entry = tk.Entry(self, textvariable=lastname).pack()
         self.user_data.append(lastname)
 
-
         day = tk.StringVar()
         month = tk.StringVar()
         year = tk.StringVar()
@@ -57,7 +53,6 @@ class CreateUserForm(tk.Toplevel):
         button_frame.pack(side=tk.BOTTOM)
 
         self.root.grab_set()
-
 
     def insert_data(self):
 
@@ -213,14 +208,16 @@ class AdminTool(tk.Tk):
         add_course = tk.Button(add_options, text="Add Course", command=lambda: CreateCourseForm(self)).pack(fill=tk.X)
 
         self.course_list = tk.Listbox(self)
-        self.course_list.bind('<Double-1>', lambda x: self.open_course(self.course_list.get(tk.ACTIVE), x))
+        self.course_list.bind('<Double-1>', lambda: self.open_course(self.course_list.get(tk.ACTIVE)))
         self.course_list.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True, padx=40, pady=20)
 
         refresh_button = tk.Button(self, text="Refresh", command=self.refresh_database).pack(fill=tk.X)
 
-    def open_course(self, course, debug):
+    def open_course(self, course):
         self.refresh_database()
-        relevant_enrollment_user_ids = {enrollment[2] for enrollment in self.enrollment_list if course[0] == enrollment[0]}
+        relevant_enrollment_user_ids = {
+            enrollment[2] for enrollment in self.enrollment_list if course[0] == enrollment[0]
+        }
 
         self.enrollment_window = tk.Toplevel(self)
         self.enrollment_window.title("Enrollments")

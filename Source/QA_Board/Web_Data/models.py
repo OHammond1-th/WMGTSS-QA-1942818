@@ -52,6 +52,10 @@ class User(UserMixin):
 
     def hasnt_interacted_today(self):
         today = dt.date.today()
+
+        if self.last_interaction is None:
+            return True
+
         time_period = today - self.last_interaction
 
         if time_period.days > 1:
@@ -62,7 +66,7 @@ class User(UserMixin):
         return str(self.ident)
 
     def get_classes(self):
-        return [course for course in wmgtss_qa.get_users_enrollments(self.get_id())]
+        return [Course.get_by_id(enrollment) for enrollment in wmgtss_qa.get_users_enrollments(self.get_id())]
 
     @staticmethod
     def get_by_id(user_id):
@@ -92,7 +96,7 @@ class Question:
 
     @staticmethod
     def create_question(course_id, author_id, title, description, publishable):
-        return wmgtss_qa.insert_into_posts(course_id, author_id, title, description, publishable)
+        return wmgtss_qa.insert_into_posts(course_id, author_id, title, description, publishable)[0][0]
 
     @staticmethod
     def get_class_questions(class_id):
