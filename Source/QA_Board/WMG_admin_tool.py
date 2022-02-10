@@ -197,6 +197,8 @@ class AdminTool(tk.Tk):
             create_course.set_database(self.database)
             enroll_user.set_database(self.database)
 
+            self.refresh_database()
+
             self.deiconify()
             self.login_window.destroy()
         except DatabaseError as e:
@@ -217,7 +219,7 @@ class AdminTool(tk.Tk):
         refresh_button = tk.Button(self, text="Refresh", command=self.refresh_database).pack(fill=tk.X)
 
     def open_course(self, course, debug):
-
+        self.refresh_database()
         relevant_enrollment_user_ids = {enrollment[2] for enrollment in self.enrollment_list if course[0] == enrollment[0]}
 
         self.enrollment_window = tk.Toplevel(self)
@@ -229,20 +231,27 @@ class AdminTool(tk.Tk):
         self.users_not_enrolled = tk.Listbox(page)
 
         move_to_enrolled = tk.Button(page, text="->", padx=10, pady=10,
-                                     command=lambda: self.enroll(self.users_not_enrolled.get(tk.ACTIVE)))
+                                     command=lambda: self.enroll(self.users_not_enrolled.curselection(),
+                                                                 self.users_not_enrolled.get(tk.ACTIVE)))
 
         move_to_not_enrolled = tk.Button(page, text="<-", padx=10, pady=10,
-                                         command=lambda: self.unenroll(self.users_enrolled.get(tk.ACTIVE)))
+                                         command=lambda: self.unenroll(self.users_enrolled.curselection(),
+                                                                       self.users_enrolled.get(tk.ACTIVE)))
 
         self.users_enrolled = tk.Listbox(page)
 
-        exit_button = tk.Button(page, text="Done", command=lambda: self.compute_changes(relevant_enrollment_user_ids))
+        save_button = tk.Button(page, text="Save",
+                                command=lambda: self.compute_changes(course, relevant_enrollment_user_ids))
+
+        exit_button = tk.Button(page, text="Exit",
+                                command=lambda: self.enrollment_window.destroy())
 
         self.users_not_enrolled.grid(column=0, row=0, rowspan=2)
         move_to_enrolled.grid(column=1, row=0)
         move_to_not_enrolled.grid(column=1, row=1)
         self.users_enrolled.grid(column=2, row=0, rowspan=2)
-        exit_button.grid(column=0, row=2, columnspan=3)
+        save_button.grid(column=0, row=2)
+        exit_button.grid(column=2, row=2)
 
         page.grid()
 
@@ -253,6 +262,31 @@ class AdminTool(tk.Tk):
             else:
                 self.users_not_enrolled.insert(tk.END, user)
 
+    def enroll(self, index, item):
+        self.users_enrolled.insert(tk.END, item)
+        self.users_not_enrolled.delete(index)
+
+    def unenroll(self, index, item):
+        self.users_not_enrolled.insert(tk.END, item)
+        self.users_enrolled.delete(index)
+
+    def compute_changes(self, course, old_users_enrolled):
+        enrolled = {user[0] for user in self.users_enrolled.get(0, tk.END)}
+        unenrolled = {user[0] for user in self.users_not_enrolled.get(0, tk.END)}
+
+        enrolls = enrolled.difference(old_users_enrolled)
+        unenrolls = unenrolled.intersection(old_users_enrolled)
+
+        if enrolls:
+            for enroll in enrolls:
+                enroll_user.create_new_enrollment(course[0], enroll)
+
+        if unenrolls:
+            for unenroll in unenrolls:
+                self.database.query(f"DELETE FROM enrollments "
+                                    f"WHERE enrollments.course_id = {course[0]} AND enrollments.user_id = {unenroll}")
+
+        self.database.commit()
 
     def refresh_database(self):
 
