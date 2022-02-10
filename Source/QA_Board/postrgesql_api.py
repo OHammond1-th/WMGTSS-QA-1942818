@@ -47,11 +47,7 @@ class DB_API:
 
         self.database.commit()
 
-        if len(self.result_buffer) == 1 or amount == 1:
-            return self.result_buffer[0]
-
         if amount:
-
             amount = min(amount, len(self.result_buffer))
             return self.result_buffer[:amount]
         return self.result_buffer

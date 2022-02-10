@@ -1,25 +1,18 @@
-<li class="list-group-item card">
-    <button type="button" onclick="window.location.href='{{url_for('views.question_page', question_id=question.ident)}}';"></button>
-    <h4 class="title" >{{ question.title }}</h4>
-    {% if question.answered %}
-    <div class="check">
-        <img src="">
-    </div>
-    {% endif %}
-    <div id="elevated-options">
-        {% if elevated %}
-            <label for="delete-{{question.id}}">Delete</label>
-            <button type="button" id="delete-{{question.id}}" onclick="window.location.href='{{url_for('views.delete_question', question_id=question.ident)}}';"></button>
-            <form>
-                <input type="text"
-                       name="{{question.id}}-answer"
-                       id="{{question.id}}-answer"
-                       placeholder="Answer"
-                       >
-            </form>
-            <label for="reply-{{question.id}}">Reply</label>
-            <button type="button" id="reply-{{question.id}}" onclick="window.location.href='{{url_for('views.answer_question', question_id=question.ident)}}';"></button>
-    </div>
+<li class="list-group-item card question">
+    <a href="{{url_for('views.question_page', question_id=question.ident)}}">
+        <h4 class="title" >{{ question.title }}</h4>
+        {% if question.answered %}
+        <div class="check">
+            <img src="">
+        </div>
+        {% endif %}
+    </a>
+    {% if elevated %}
+    <form class="answer-box" method="post">
+        <div class="elevated-options">
+            <button type="button" onclick="window.location.href='{{url_for('views.delete_question', question_id=question.ident)}}';">Delete</button>
+        </div>
+    </form>
     {% endif %}
 </li>
 

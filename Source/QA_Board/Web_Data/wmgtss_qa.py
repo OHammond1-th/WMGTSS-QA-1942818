@@ -42,15 +42,15 @@ def delete_from_table(table, _id):
 
 
 def get_course_by_id(course_id):
-    return select_from_table('courses', '*', f"WHERE courses.course_id = '{course_id}'")
+    return select_from_table('courses', '*', f"WHERE courses.course_id = '{course_id}'")[0]
 
 
 def get_user(user_id):
-    return select_from_table('users', '*', f"WHERE users.user_id = '{user_id}'")
+    return select_from_table('users', '*', f"WHERE users.user_id = '{user_id}'")[0]
 
 
 def get_user_by_username(username):
-    return select_from_table('users', '*', f"WHERE users.user_username = '{username}'")
+    return select_from_table('users', '*', f"WHERE users.user_username = '{username}'")[0]
 
 
 def get_users_by_role(role):
@@ -59,7 +59,7 @@ def get_users_by_role(role):
 
 
 def get_users_enrollments(user_id):
-    return select_from_table('enrollments', 'course_id', f"WHERE enrollments.user_id = '{user_id}'")
+    return select_from_table('enrollments', 'course_id', f"WHERE enrollments.user_id = '{user_id}'")[0]
 
 
 def get_user_elevation(user_id):
@@ -84,7 +84,7 @@ def get_post_comments(post_id):
 
 
 def get_post(post_id):
-    return select_from_table('posts', '*', f"WHERE posts.post_id = '{post_id}'")
+    return select_from_table('posts', '*', f"WHERE posts.post_id = '{post_id}'")[0]
 
 
 def insert_into_posts(course_id, author_id, title, description, publishable):
@@ -98,9 +98,9 @@ def insert_into_comments(post_id, author_id, description, parent_id=None):
 
 
 def update_question_with_answer(question_id, answer):
-    return update_table_row('questions', ['question_answer'], [answer], question_id)
+    return update_table_row('posts', ['post_answer'], [answer], question_id)
 
 
 def delete_from_questions(question_id):
-    return delete_from_table('questions', question_id)
+    return delete_from_table('posts', question_id)
 

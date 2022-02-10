@@ -1,4 +1,3 @@
-# Recursive macro to unravel comment tree
 {% macro display_comment_tree(parent) %}
 {% for child in parent.children %}
     <div class="card">
@@ -13,7 +12,7 @@
 {% endfor %}
 {% endmacro %}
 
-
+{% if comment %}
 <div class="card">
     <div class="card-body">
         <p class="card-text"> {{comment.description}} </p>
@@ -23,3 +22,18 @@
         {{ display_comment_tree(comment) }}
     </div>
 </div>
+{% else %}
+<div class="card">
+    <div class="card-body">
+        <form class="answer-box center">
+            <input type="text"
+                   class="comment-field"
+                   name="new-comment"
+                   id="new-comment"
+                   placeholder="Write a new comment here..."
+            >
+        </form>
+        <button type="button" class="comment-button" onclick="window.location.href='{{url_for('views.create_comment', question_id=question.ident)}}';">Comment</button>
+    </div>
+</div>
+{% endif %}

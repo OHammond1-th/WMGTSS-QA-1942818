@@ -57,6 +57,8 @@ def question_list():
         questions_public = Question.get_public_questions(course_ids)
         questions_private = Question.get_private_questions(current_user.get_id())
 
+        print(questions_public, questions_private)
+
         return render_template("question_list.html",
                                elevated=elevated,
                                courses=courses,
@@ -101,6 +103,26 @@ def question_page(question_id):
         return redirect(url_for("views.question_list"))
 
 
+@views.route("/Questions/<int:question_id>/Comment/New")
+def create_comment(question_id, parent=None):
+    if parent:
+        comment_text = request.form[f'{parent}-comment']
+    else:
+        comment_text = request.form[f'new-comment']
+
+    if comment_text:
+        success = Comment.create_comment(question_id, current_user.ident, comment_text, parent)
+
+        if success:
+            return redirect(url_for("views.question_page", question_id=question_id))
+
+        else:
+            return error_html()
+
+    else:
+        return redirect(url_for("views.question_page", question_id=question_id))
+
+
 @views.route("/Deleting/<int:question_id>")
 @login_required
 def delete_question(question_id):
@@ -113,7 +135,7 @@ def delete_question(question_id):
         return error_html()
 
 
-@views.route("/Answering/<int:question_id>")
+@views.route("/Answering/<int:question_id>", methods=['POST'])
 @login_required
 def answer_question(question_id):
     success = Question.provide_answer(question_id, request.form[f'{question_id}-answer'])

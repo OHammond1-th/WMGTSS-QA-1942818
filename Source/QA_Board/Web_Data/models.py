@@ -6,6 +6,7 @@ import datetime as dt
 
 # Helper function to avoid having runtime errors about parameters not being correct
 def protect_construct(class_type, arguments):
+    print(class_type, arguments)
     try:
         return class_type(*arguments)
     except TypeError as e:

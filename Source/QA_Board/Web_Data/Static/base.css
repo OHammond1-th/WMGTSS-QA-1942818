@@ -31,6 +31,80 @@ body {
     box-sizing: content-box;
 }
 
+.elevated-options {
+    float: right;
+    z-index: 1;
+}
+
+.question {
+    padding-bottom: 50px;
+}
+
+.answer-box {
+    float: right;
+    width: 70%;
+}
+
+.answer-field {
+    margin: 1%;
+    width: -webkit-fill-available;
+}
+
+.boarder {
+    margin: 2%;
+}
+
+.boarder-outer {
+    margin: 4%;
+    padding: 6%;
+}
+
+.meta {
+    float: right;
+}
+
+.meta-text {
+    float: right;
+    padding-right: 3%;
+}
+
+.meta-text {
+    float: left;
+    padding-right: 3%;
+}
+
+.center {
+    width: 100%;
+}
+
+.card-inner {
+    margin: 10%;
+}
+
+.comment-button {
+    float: right;
+    padding-right: 5%;
+}
+
+#ques-pub {
+    display: block;
+}
+
+#ques-pri {
+    display: none;
+}
+
+#back-button {
+    padding: 2%;
+    width: 4%;
+    float: left;
+}
+
+#new-comment {
+    width: 97%;
+    margin: 1%;
+}
+
 /* -- The CSS beyond this point is to handle the question form -- */
 
 .clear {
