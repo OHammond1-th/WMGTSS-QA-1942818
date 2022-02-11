@@ -26,7 +26,7 @@ def create_new_user(role, username, firstname, lastname, dob, password=None):
         f"INSERT INTO "
         f"users(role_id, user_username, user_password, user_firstname, user_lastname, user_dateofbirth) "
         f"VALUES "
-        f"('{get_role_id(role)}', '{str(username)}', '{password}', '{str(firstname)}', '{str(lastname)}', '{str(dob)}') "
+        f"('{role}', '{str(username)}', '{password}', '{str(firstname)}', '{str(lastname)}', '{str(dob)}') "
     )
 
 
@@ -40,9 +40,10 @@ def query_from_file(file_path):
 
     try:
         for line in lines:
+            line_args = line[:-2].split(',')
+            line_args[0] = get_role_id(line_args[0])[0]
 
-            line_args = re.split(r"(,|-|/|\s)+", line)
-            line_args[0] = get_role_id(line_args[0])
+            print(line_args)
 
             create_new_user(*line_args)
 
@@ -59,7 +60,7 @@ def commit():
 
 if __name__ == "__main__":
 
-    database = DB_API("WMGTSS_QA", "administrator", "default")
+    database = DB_API("WMGTSS_QA_TEST", "administrator", "default")
 
     if exists(argv[1]):
         query_from_file(argv[1])

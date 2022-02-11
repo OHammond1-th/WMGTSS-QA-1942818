@@ -34,8 +34,7 @@ def query_from_file(file_path):
 
     try:
         for line in lines:
-
-            line_args = re.split(r"(,|-|/|\s)+", line)
+            line_args = line[:-2].split(',')
 
             create_new_course(*line_args)
 
@@ -52,7 +51,7 @@ def commit():
 
 if __name__ == "__main__":
 
-    database = DB_API("WMGTSS_QA", "administrator", "default")
+    database = DB_API("WMGTSS_QA_TEST", "administrator", "default")
 
     if exists(argv[0]):
         query_from_file(argv[0])

@@ -31,8 +31,7 @@ def query_from_file(file_path):
 
     try:
         for line in lines:
-
-            line_args = re.split(r"(,|-|/|\s)+", line)
+            line_args = line[:-2].split(',')
 
             create_new_enrollment(*line_args)
 
@@ -45,7 +44,7 @@ def query_from_file(file_path):
 
 if __name__ == "__main__":
 
-    database = DB_API(str(argv[0]), "administrator", "default")
+    database = DB_API("WMGTSS_QA_TEST", "administrator", "default")
 
     if exists(argv[1]):
         query_from_file(argv[1])

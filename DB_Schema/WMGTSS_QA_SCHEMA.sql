@@ -16,7 +16,7 @@ CREATE TABLE "users" (
 	"user_id" BIGSERIAL PRIMARY KEY,
 	"role_id" INTEGER NOT NULL,
 	"user_username" VARCHAR(256) NOT NULL UNIQUE,
-	"user_password" VARCHAR(256) UNIQUE,
+	"user_password" VARCHAR(256) ,
 	"user_firstname" VARCHAR(256) NOT NULL,
 	"user_lastname" VARCHAR(256) NOT NULL,
 	"user_dateofbirth" DATE NOT NULL,
