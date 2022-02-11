@@ -34,7 +34,7 @@ def query_from_file(file_path):
 
             line_args = re.split(r"(,|-|/|\s)+", line)
 
-            create_course(*line_args)
+            create_new_enrollment(*line_args)
 
         database.commit()
 
@@ -45,10 +45,10 @@ def query_from_file(file_path):
 
 if __name__ == "__main__":
 
-    database = DB_API("WMGTSS_QA", "administrator", "default")
+    database = DB_API(str(argv[0]), "administrator", "default")
 
-    if exists(argv[0]):
-        query_from_file(argv[0])
+    if exists(argv[1]):
+        query_from_file(argv[1])
 
     else:
-        create_course(*argv)
+        create_new_enrollment(*argv)
