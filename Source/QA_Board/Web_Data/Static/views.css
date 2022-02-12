@@ -60,6 +60,8 @@ body {
 }
 
 .meta {
+    margin-left: 70%;
+    width: 50%;
     float: right;
 }
 
@@ -79,6 +81,10 @@ body {
 
 .card-inner {
     margin: 10%;
+}
+
+.page-text {
+    text-align: center;
 }
 
 .comment-button {
@@ -103,6 +109,16 @@ body {
 #new-comment {
     width: 97%;
     margin: 1%;
+}
+
+#search-bar {
+    width: 100%;
+    margin: 10px;
+}
+
+#base-logout {
+    width: 5%;
+    margin-bottom: 20px;
 }
 
 /* -- The CSS beyond this point is to handle the question form -- */

@@ -10,7 +10,7 @@
     {% if elevated %}
     <form class="answer-box" method="post">
         <div class="elevated-options">
-            <button type="button" onclick="window.location.href='{{url_for('views.question_answer', question_id=question.ident)}}';">Answer</button>
+            <button type="button" onclick="window.location.href='{{url_for('views.answer_question', question_id=question.ident)}}';">Answer</button>
             <button type="button" onclick="window.location.href='{{url_for('views.delete_question', question_id=question.ident)}}';">Delete</button>
         </div>
     </form>

@@ -16,8 +16,8 @@
         <div class="nav-item">
             {% block nav_bar %} {% endblock %}
         </div>
-        <li class="nav-item">
-            <a class="btn-lg btn-dark nav-link white" id="base-logout" href="{{url_for('views.logout')}}">Logout</a>
+        <li class="nav-item" id="base-logout">
+            <a class="btn-lg btn-dark nav-link white" id="base-logout-button" href="{{url_for('views.logout')}}">Logout</a>
         </li>
     </nav>
     <div class="container" id="main-content">

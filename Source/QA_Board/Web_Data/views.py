@@ -123,11 +123,12 @@ def delete_question(question_id):
 @views.route("/Questions/<int:question_id>/Answer", methods=['GET', 'POST'])
 @login_required
 def answer_question(question_id):
+
     if current_user.is_elevated() and request.method == 'GET':
         return render_template("question_answer.html", question=Question.get_question_by_id(question_id))
 
     if current_user.is_elevated() and request.method == 'POST':
-        Question.provide_answer(question_id, request.form['answer'])
+        Question.provide_answer(question_id, request.form['answer'] if request.form['answer'] is not "None" else None)
 
     return redirect(url_for("views.question_page", question_id=question_id))
 

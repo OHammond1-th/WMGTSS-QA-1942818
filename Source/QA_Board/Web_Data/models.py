@@ -67,7 +67,7 @@ class User(UserMixin):
         return str(self.ident)
 
     def get_classes(self):
-        return [Course.get_by_id(enrollment) for enrollment in wmgtss_qa.db.get_users_enrollments(self.get_id())]
+        return [Course.get_by_id(enrollment[0]) for enrollment in wmgtss_qa.db.get_users_enrollments(self.get_id())]
 
     @staticmethod
     def set_password_by_id(user_id, password):
@@ -96,12 +96,12 @@ class Question:
     description: str
     answer: str
     date_created: dt.datetime
-    published: bool
     publishable: bool
+    published: bool
 
     @staticmethod
     def create_question(course_id, author_id, title, description, publishable):
-        return wmgtss_qa.db.insert_into_posts(course_id, author_id, title, description, publishable)[0][0]
+        return wmgtss_qa.db.insert_into_posts(course_id, author_id, title, description, publishable)[0]
 
     @staticmethod
     def get_class_questions(class_id):
@@ -113,7 +113,7 @@ class Question:
         for course in classes:
             all_questions += Question.get_class_questions(course)
 
-        return all_questions
+        return [question for question in all_questions if question.published]
 
     @staticmethod
     def get_private_questions(user_id):

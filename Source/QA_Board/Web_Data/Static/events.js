@@ -1,4 +1,18 @@
 {
+    $( document.getElementById("main-content") ).click(function() {
+        $(".js-hiddenform").slideUp();
+    });
+
+    $(".js-expand").click(function() {
+        if ($('#title').val()) {
+              //validate form
+        } else {
+            $(".js-hiddenform").slideDown();
+        }
+    });
+}
+
+{
     let pub_question_list = document.getElementById("ques-pub");
     let pri_question_list = document.getElementById("ques-pri");
 
@@ -55,18 +69,4 @@
             }
         }
     }
-}
-
-{
-    $( document.getElementById("main-content") ).click(function() {
-        $(".js-hiddenform").slideUp();
-    });
-
-    $(".js-expand").click(function() {
-        if ($('#title').val()) {
-              //validate form
-        } else {
-            $(".js-hiddenform").slideDown();
-        }
-    });
 }

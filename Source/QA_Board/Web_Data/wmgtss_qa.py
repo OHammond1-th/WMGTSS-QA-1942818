@@ -4,6 +4,12 @@ import psycopg2 as psql
 from postrgesql_api import DB_API
 
 
+def to_list(val):
+    if type(val) is not list:
+        val = [val]
+    return val
+
+
 class DB_singleton(DB_API):
 
     def __init__(self, dbname, user, password):
@@ -18,7 +24,7 @@ class DB_singleton(DB_API):
             elif len(self.get_result()) > 0:
                 return self.get_result()[0]
             else:
-                return None
+                return []
         except psql.Error:
             return None
 
@@ -65,25 +71,26 @@ class DB_singleton(DB_API):
         return self.select_from_table('users', '*', f"WHERE users.user_username = '{username}'")
 
     def get_users_by_role(self, role):
-        return self.select_from_table('users', '*', f"FULL OUTER JOIN roles ON roles.role_id = users.role_id"
+        result =  self.select_from_table('users', '*', f"FULL OUTER JOIN roles ON roles.role_id = users.role_id"
                                                f" WHERE roles.role_name = '{role.lower()}'")
+        return to_list(result)
 
     def get_users_enrollments(self, user_id):
-        return self.select_from_table('enrollments', 'course_id', f"WHERE enrollments.user_id = '{user_id}'")
+        result = self.select_from_table('enrollments', 'course_id', f"WHERE enrollments.user_id = '{user_id}'")
+        return to_list(result)
 
     def get_user_elevation(self, user_id):
         return self.select_from_table('users', 'roles.role_elevated', f"FULL OUTER JOIN roles "
                                                                       f"ON roles.role_id = users.role_id"
                                                                       f" WHERE users.user_id = {user_id}")
 
-    def get_published_posts(self):
-        return self.select_from_table('posts', '*', f"WHERE posts.post_published = TRUE")
-
     def get_posts_by_class(self, class_id):
-        return self.select_from_table('posts', '*', f"WHERE posts.course_id = '{class_id}'")
+        result = self.select_from_table('posts', '*', f"WHERE posts.course_id = '{class_id}'")
+        return to_list(result)
 
     def get_posts_by_user(self, user_id):
-        return self.select_from_table('posts', '*', f"WHERE posts.author_id = '{user_id}'")
+        result = self.select_from_table('posts', '*', f"WHERE posts.author_id = '{user_id}'")
+        return to_list(result)
 
     def get_post_comments(self, post_id):
         return self.select_from_table('comments', '*', f"WHERE comments.parent_id = '{post_id}'")
