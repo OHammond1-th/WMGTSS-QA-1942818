@@ -70,6 +70,10 @@ class User(UserMixin):
         return [Course.get_by_id(enrollment) for enrollment in wmgtss_qa.db.get_users_enrollments(self.get_id())]
 
     @staticmethod
+    def set_password_by_id(user_id, password):
+        return wmgtss_qa.db.set_user_password(user_id, password)
+
+    @staticmethod
     def get_by_id(user_id):
         return pc(User, wmgtss_qa.db.get_user(user_id))
 
@@ -141,11 +145,11 @@ class Comment:
 
     @staticmethod
     def create_comment(post_id, author_id, description, parent_id=None):
-        return wmgtss_qa.insert_into_comments(post_id, author_id, description, parent_id)
+        return wmgtss_qa.db.insert_into_comments(post_id, author_id, description, parent_id)
 
     @staticmethod
     def get_post_comments(post_id):
-        comments = [pc(Comment, result) for result in wmgtss_qa.get_post_comments(post_id)]
+        comments = [pc(Comment, result) for result in wmgtss_qa.db.get_post_comments(post_id)]
         comment_tree = []
 
         for comment in comments:

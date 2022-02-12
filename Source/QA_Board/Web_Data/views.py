@@ -1,40 +1,15 @@
+import traceback
+
 from flask import Blueprint, request, redirect, url_for, render_template, flash
-from flask_login import login_required, login_user, logout_user, current_user
-from werkzeug.security import check_password_hash
+from flask_login import login_required, logout_user, current_user
 from .models import Course, User, Question, Comment
 
 views = Blueprint('views', __name__)
 
 
-@views.route('/Login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'GET':
-        return render_template("login.html")
-
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-
-        user = User.get_by_username(username)
-
-        if user:
-
-            correct_password = check_password_hash(user.password, password)
-
-            if correct_password:
-
-                login_user(user)
-                return redirect(request.args.get('next') or url_for("views.question_list"))
-
-        return render_template("login.html", failed=True)
-
-    else:
-        return "<h1>405: Method not allowed.</h1>"
-
-
 @views.route('/')
 def home():
-    return redirect(url_for('views.login'))
+    return redirect(url_for('views.question_list'))
 
 
 @views.route('/Logout')
@@ -43,55 +18,65 @@ def logout():
 
     logout_user()
 
-    return redirect(url_for('views.login'))
+    return redirect(url_for('views.home'))
 
 
 @views.route('/Questions', methods=['GET', 'POST'])
 @login_required
 def question_list():
-    courses = current_user.get_classes()
+    try:
+        courses = current_user.get_classes()
 
-    if request.method == 'GET':
-        elevated = current_user.is_elevated()
-        course_ids = [course.ident for course in courses]
-        questions_public = Question.get_public_questions(course_ids)
-        questions_private = Question.get_private_questions(current_user.get_id())
+        if request.method == 'GET':
+            elevated = current_user.is_elevated()
+            course_ids = [course.ident for course in courses]
 
-        print(questions_public, questions_private)
+            try:
+                questions_public = Question.get_public_questions(course_ids)
+                questions_private = Question.get_private_questions(current_user.get_id())
+            except TypeError:
+                questions_public = []
+                questions_private = []
 
-        return render_template("question_list.html",
-                               elevated=elevated,
-                               courses=courses,
-                               public_questions=questions_public,
-                               private_questions=questions_private
-                               )
+            print(questions_public, questions_private)
 
-    if request.method == 'POST':
-        title = request.form['title']
-        description = request.form['description']
-        course_input = request.form['selected-course']
-        publishable = True if request.form.get('publishable') == "on" else False
+            return render_template("question_list.html",
+                                   elevated=elevated,
+                                   courses=courses,
+                                   public_questions=questions_public,
+                                   private_questions=questions_private
+                                   )
 
-        for course in courses:
-            if course_input.strip() == course.name:
-                course_input = course.ident
+        if request.method == 'POST':
+            title = request.form['title']
+            description = request.form['description']
+            course_input = request.form['selected-course']
+            publishable = True if request.form.get('publishable') == "on" else False
 
-        if title and description and course_input and publishable is not None and current_user.hasnt_interacted_today():
-            question_id = str(Question.create_question(course_input, current_user.ident, title, description, publishable))
-            current_user.update_interaction()
-            return redirect(url_for('views.question_page', question_id=question_id))
+            for course in courses:
+                if course_input.strip() == course.name:
+                    course_input = course.ident
 
-        flash("Submission failed due to missing field")
-        return redirect(url_for("views.question_list"))
+            if title and description and course_input and publishable is not None and current_user.hasnt_interacted_today():
+                question_id = str(Question.create_question(course_input, current_user.ident, title, description, publishable))
+                current_user.update_interaction()
+                return redirect(url_for('views.question_page', question_id=question_id))
 
-    else:
-        return "<h1>405: Method not allowed.</h1>"
+            flash("Submission failed due to missing field")
+            return redirect(url_for("views.question_list"))
+
+        else:
+            return "<h1>405: Method not allowed.</h1>"
+
+    except EOFError as e:
+        print(e)
+        return "<h2>You are not enrolled or an error has occurred. " \
+               "Please contact the system administrator if there is a problem <h2>"
 
 
 @views.route('/Questions/<int:question_id>')
 @login_required
 def question_page(question_id):
-
     question = Question.get_question_by_id(question_id)
     course = Course.get_by_id(question.course)
     author = User.get_by_id(question.author)
@@ -135,16 +120,16 @@ def delete_question(question_id):
         return error_html()
 
 
-@views.route("/Answering/<int:question_id>", methods=['POST'])
+@views.route("/Questions/<int:question_id>/Answer", methods=['GET', 'POST'])
 @login_required
 def answer_question(question_id):
-    success = Question.provide_answer(question_id, request.form[f'{question_id}-answer'])
+    if current_user.is_elevated() and request.method == 'GET':
+        return render_template("question_answer.html", question=Question.get_question_by_id(question_id))
 
-    if success:
-        return redirect(url_for("views.question_page", question_id=question_id))
+    if current_user.is_elevated() and request.method == 'POST':
+        Question.provide_answer(question_id, request.form['answer'])
 
-    else:
-        return error_html()
+    return redirect(url_for("views.question_page", question_id=question_id))
 
 
 def error_html():

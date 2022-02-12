@@ -12,20 +12,28 @@
             <button class="btn-lg btn-block" id="ShowPri"> Private </button>
         </li>
     </ul>
-    <input type="text" id="search-bar" placeholder="Search for a question">
+    <div class="container" id="filters">
+        <input type="text" id="search-bar" placeholder="Search for a question">
+    </div>
 </div>
 {% endblock %}
 {% block scroll_content %}
-    <div class="container">
-        <ul class="published" id="ques-pub">
-            {% for question in public_questions %}
-                {% include "question_template.html" %}
-            {% endfor %}
-        </ul>
-        <ul class="personal" id="ques-pri">
-            {% for question in private_questions %}
-                {% include "question_template.html" %}
-            {% endfor %}
-        </ul>
-    </div>
+    {% if public_questions|length or private_questions|length %}
+        <div class="container">
+            <ul class="published" id="ques-pub">
+                {% for question in public_questions %}
+                    {% include "question_template.html" %}
+                {% endfor %}
+            </ul>
+            <ul class="personal" id="ques-pri">
+                {% for question in private_questions %}
+                    {% include "question_template.html" %}
+                {% endfor %}
+            </ul>
+        </div>
+        {% else %}
+        <p class="empty-text">
+            No questions here yet!
+        </p>
+    {% endif %}
 {% endblock %}

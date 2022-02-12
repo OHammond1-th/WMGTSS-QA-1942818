@@ -1,65 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"
-    >
-</head>
-<body>
-    <div class="container">
-        <div class="logo">
+{% extends "authentication.html" %}
+{% block content %}
+<div class="logo">
+    <img src="{{url_for('static', filename='Resources/WMG.png')}}">
+</div>
+<div class="login-form">
+    <form method="POST">
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text"
+                   class="form-control"
+                   id="username"
+                   name="username"
+                   placeholder="Enter Username"
+            />
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password"
+                   class="form-control"
+                   id="password"
+                   name="password"
+                   placeholder="Enter Password"
+            />
+        </div>
 
+        <div class="form-inline">
+            <input type="submit"
+                   class="pass-action"
+                   id="sub-login"
+                   name="Submit"
+            >
+            <input type="submit"
+                   class="pass-action"
+                   id="sub-request"
+                   name="Forgot Details"
+                   value="Forgot Details"
+            >
         </div>
-        <div class="login-form">
-            <form method="POST">
-                <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text"
-                           class="form-control"
-                           id="username"
-                           name="username"
-                           placeholder="Enter Username"
-                    />
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password"
-                           class="form-control"
-                           id="password"
-                           name="password"
-                           placeholder="Enter Password"
-                    />
-                </div>
-
-                <div>
-                    <div>
-                        <input type="submit"
-                               class="pass_action"
-                               id="sub-login"
-                               name="Submit"
-                        >
-                    </div>
-                    <div>
-                        <input type="submit"
-                               class="pass_action"
-                               id="sub-request"
-                               name="Forgot Details"
-                               value="Forgot Details"
-                        >
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div>
-            <h4 id="failed_login">
-                {% if failed %}
-                    Username or Password is incorrect
-                {% endif %}
-            </h4>
-        </div>
-    </div>
-    {% include "bootstrap.html" %}
-</body>
-</html>
+    </form>
+</div>
+<div>
+    <h4 class="text-danger" id="failed_login">
+        {% if failed %}
+            Username or Password is incorrect
+        {% endif %}
+    </h4>
+</div>
+{% endblock %}

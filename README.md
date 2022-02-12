@@ -41,3 +41,5 @@ To run the website open a command window in the QA_BOARD directory and perform t
 
 python3 main.py
 -- please note that on some installations of python you need to replace python3 with py
+
+-- please note that all web styling was performed on a 2560x1440 monitor so visuals may vary, this would be updated on the final product

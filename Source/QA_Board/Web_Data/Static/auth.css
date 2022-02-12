@@ -1,0 +1,38 @@
+body {
+    background: rgb(210, 255, 210)
+}
+
+h4 {
+    padding: 10px;
+}
+
+form {
+    padding: 20px;
+}
+
+.pass-action {
+    min-width: 200px;
+    padding-left: 30px;
+    padding-right: 30px;
+    margin-left: 16%;
+    margin-right: 16%;
+}
+
+.logo {
+    padding: 10px;
+}
+
+.container {
+    margin-top: 15%;
+    -webkit-border-radius: 10px 10px 10px 10px;
+    border-radius: 10px 10px 10px 10px;
+    background: #fff;
+    padding: 30px;
+    width: 90%;
+    max-width: 50%;
+    position: relative;
+    padding: 0px;
+    -webkit-box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+    box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+    text-align: center;
+}

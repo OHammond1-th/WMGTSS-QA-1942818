@@ -6,26 +6,6 @@ CREATE ROLE web_client WITH
 	LOGIN
 ;
 
-GRANT
-	SELECT,
-	UPDATE,
-	INSERT,
-	DELETE
-ON ALL TABLES IN SCHEMA
-	public
-TO
-	web_client
-;
-
-GRANT 
-	USAGE,
-	SELECT 
-ON ALL SEQUENCES IN SCHEMA
-	public 
-TO 
-	web_client
-;
-
 CREATE ROLE administrator WITH
 	SUPERUSER
 	NOCREATEDB

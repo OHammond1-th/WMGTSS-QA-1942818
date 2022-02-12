@@ -1,0 +1,25 @@
+{% extends "authentication.html" %}
+{% block content %}
+<div class="login-form">
+    <form method="POST">
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password"
+                   class="form-control"
+                   id="password"
+                   name="password"
+                   placeholder="Enter Password"
+            />
+        </div>
+
+        <div>
+            <div>
+                <input type="submit"
+                       class="pass_action"
+                       id="sub-login"
+                       name="Submit"
+                >
+            </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,3 +1,4 @@
+
 CREATE TABLE "roles" (
 	"role_id" BIGSERIAL PRIMARY KEY,
 	"role_name" VARCHAR(256) NOT NULL,
@@ -59,6 +60,26 @@ CREATE TABLE "comments" (
 	constraint "fk_author_id" foreign key ("author_id") REFERENCES "users"("user_id"),
 	constraint "fk_parent_id" foreign key ("parent_id") REFERENCES "comments"("comment_id")
 );
+
+GRANT
+	SELECT,
+	UPDATE,
+	INSERT,
+	DELETE
+ON ALL TABLES IN SCHEMA
+	public
+TO
+	web_client
+;
+
+GRANT 
+	USAGE,
+	SELECT 
+ON ALL SEQUENCES IN SCHEMA
+	public 
+TO 
+	web_client
+;
 
 -- ROLES
 

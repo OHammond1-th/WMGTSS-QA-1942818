@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block static_content %}
+<div class="card">
+    <h2 class="card-title">{{ question.title }}</h2>
+    <p class="card-body">{{ question.description }}</p>
+
+    <form class="answer-box center">
+        <input type="text"
+               class="answer-field"
+               name="answer"
+               id="{{question.ident}}-answer"
+               placeholder="Answer"
+               value="{{ question.answer }}"
+        >
+        <input type="submit"
+               class="pass-action"
+               id="sub-request"
+               name="Forgot Details"
+               value="Forgot Details"
+        >
+    </form>
+</div>
+{% endblock %}

@@ -35,14 +35,6 @@
 
         </p>
     </div>
-    <form class="answer-box center">
-        <input type="text"
-               class="answer-field"
-               name="answer"
-               id="{{question.ident}}-answer"
-               placeholder="Answer"
-        >
-    </form>
     <button type="button" onclick="window.location.href='{{url_for('views.answer_question', question_id=question.ident)}}';">Answer</button>
 </div>
 {% endblock %}

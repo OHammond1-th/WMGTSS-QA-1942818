@@ -208,7 +208,7 @@ class AdminTool(tk.Tk):
         add_course = tk.Button(add_options, text="Add Course", command=lambda: CreateCourseForm(self)).pack(fill=tk.X)
 
         self.course_list = tk.Listbox(self)
-        self.course_list.bind('<Double-1>', lambda: self.open_course(self.course_list.get(tk.ACTIVE)))
+        self.course_list.bind('<Double-1>', lambda x: self.open_course(self.course_list.get(tk.ACTIVE)))
         self.course_list.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=True, padx=40, pady=20)
 
         refresh_button = tk.Button(self, text="Refresh", command=self.refresh_database).pack(fill=tk.X)
