@@ -13,6 +13,42 @@
 }
 
 {
+    let reply_buttons = document.getElementsByClassName("comment-submit");
+    let form_text = document.getElementById("comment-text");
+    let form_parent = document.getElementById("comment-parent");
+
+    for (let button = 0; button < reply_buttons.length; button++)
+    {
+        reply_buttons[button].addEventListener("click", function()
+            {
+               let parent_id = reply_buttons[button].value;
+               console.log(reply_buttons[button])
+               let comment_text = document.getElementById(parent_id + "-comment");
+               form_text.value = comment_text.value;
+               form_parent.value = parent_id;
+
+               document.getElementById("comment-creator").submit();
+            }
+        )
+    }
+}
+
+{
+    let course_select_buttons = document.getElementById("course").children;
+
+    for (let option = 0; option < course_select_buttons.length; option++)
+    {
+        course_select_buttons[option].addEventListener("click", function()
+            {
+                let option_text = course_select_buttons[option].textContent;
+                document.getElementById("course-dropdown").textContent = option_text;
+                document.getElementById("selected-course").value = option_text;
+            }
+        )
+    }
+}
+
+{
     let pub_question_list = document.getElementById("ques-pub");
     let pri_question_list = document.getElementById("ques-pri");
 
@@ -29,21 +65,6 @@
             pri_question_list.style.display = "block";
         }
     )
-}
-
-{
-    course_select_buttons = document.getElementById("course").children;
-
-    for (let option = 0; option < course_select_buttons.length; option++)
-    {
-        course_select_buttons[option].addEventListener("click", function()
-            {
-                option_text = course_select_buttons[option].textContent;
-                document.getElementById("course-dropdown").textContent = option_text;
-                document.getElementById("selected-course").value = option_text;
-            }
-        )
-    }
 }
 
 {

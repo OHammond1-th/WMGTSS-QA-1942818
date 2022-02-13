@@ -74,38 +74,40 @@ def question_list():
                "Please contact the system administrator if there is a problem <h2>"
 
 
-@views.route('/Questions/<int:question_id>')
+@views.route('/Questions/<int:question_id>', methods=['GET', 'POST'])
 @login_required
 def question_page(question_id):
-    question = Question.get_question_by_id(question_id)
-    course = Course.get_by_id(question.course)
-    author = User.get_by_id(question.author)
-    comments = Comment.get_post_comments(question_id)
 
-    if question:
-        return render_template("question_page.html", question=question, author=author, comments=comments, course=course)
-    else:
-        return redirect(url_for("views.question_list"))
+    if request.method == 'GET':
+        question = Question.get_question_by_id(question_id)
+        course = Course.get_by_id(question.course)
+        author = User.get_by_id(question.author)
+        comments = Comment.get_post_comments(question_id)
 
+        print(comments)
 
-@views.route("/Questions/<int:question_id>/Comment/New")
-def create_comment(question_id, parent=None):
-    if parent:
-        comment_text = request.form[f'{parent}-comment']
-    else:
-        comment_text = request.form[f'new-comment']
-
-    if comment_text:
-        success = Comment.create_comment(question_id, current_user.ident, comment_text, parent)
-
-        if success:
-            return redirect(url_for("views.question_page", question_id=question_id))
-
+        if question:
+            return render_template("question_page.html", question=question, author=author, comments=comments, course=course)
         else:
-            return error_html()
+            return redirect(url_for("views.question_list"))
+
+    if request.method == 'POST':
+        parent = request.form['comment-parent']
+        text = request.form['comment-text']
+
+        if int(parent) == -1:
+            parent = "NULL"
+
+        if text:
+            success = Comment.create_comment(question_id, current_user.ident, text, parent)
+
+            if not success:
+                return error_html()
+
+        return redirect(url_for("views.question_page", question_id=question_id))
 
     else:
-        return redirect(url_for("views.question_page", question_id=question_id))
+        return "<h1>405: Method not allowed.</h1>"
 
 
 @views.route("/Deleting/<int:question_id>")

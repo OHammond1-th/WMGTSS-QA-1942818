@@ -34,7 +34,7 @@
             {{ question.description }}
 
         </p>
-        <p class="text-success">
+        <p class="text-success page-text">
 
             {% if question.answer is not none %}
                 {{ question.answer }}
@@ -47,7 +47,32 @@
 {% endblock %}
 {% block scroll_content %}
 <div class="container">
-    {% include "comment_template.html" %}
+        <form class="answer-box center" id="comment-creator" method="post">
+            <input type="hidden"
+                   class="comment-field"
+                   name="comment-text"
+                   id="comment-text"
+            >
+            <input type="hidden"
+                   class="comment-field"
+                   name="comment-parent"
+                   id="comment-parent"
+            >
+        </form>
+        <div class="reply-input">
+            <input type="text"
+                   class="comment-input"
+                   id="-1-comment"
+                   name="-1-comment"
+                   placeholder="Comment here"
+            >
+            <button type="button"
+                    class="comment-submit"
+                    id="-1-submit"
+                    name="-1-submit"
+                    value="-1"
+            >Submit</button>
+        </div>
     {% for comment in comments %}
         {% include "comment_template.html" %}
     {% endfor %}

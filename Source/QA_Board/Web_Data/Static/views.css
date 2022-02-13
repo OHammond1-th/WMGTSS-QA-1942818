@@ -15,7 +15,7 @@ body {
 
 .logo-sml {
     height: 7%;
-    width: 7%
+    width: 7% !important;
 }
 
 .nav-link {
@@ -112,8 +112,8 @@ body {
 }
 
 #search-bar {
-    width: 100%;
-    margin: 10px;
+    width: 90%;
+    margin: 5%;
 }
 
 #base-logout {

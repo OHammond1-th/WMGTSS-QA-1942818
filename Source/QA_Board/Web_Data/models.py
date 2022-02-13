@@ -152,6 +152,8 @@ class Comment:
         comments = [pc(Comment, result) for result in wmgtss_qa.db.get_post_comments(post_id)]
         comment_tree = []
 
+        print(comments)
+
         for comment in comments:
             if comment.parent_comment is None:
                 comment.children = comment.get_comment_children(comments)

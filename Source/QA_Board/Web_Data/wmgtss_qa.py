@@ -30,6 +30,7 @@ class DB_singleton(DB_API):
 
     def insert_into_table(self, table, columns, values):
         try:
+            print(values)
             return self.query(f"INSERT INTO {table}({columns}) VALUES ({values}) RETURNING {table[:-1]}_id")
         except psql.Error:
             return None
@@ -93,7 +94,8 @@ class DB_singleton(DB_API):
         return to_list(result)
 
     def get_post_comments(self, post_id):
-        return self.select_from_table('comments', '*', f"WHERE comments.parent_id = '{post_id}'")
+        result = self.select_from_table('comments', '*', f"WHERE comments.post_id = '{post_id}'")
+        return to_list(result)
 
     def get_post(self, post_id):
         return self.select_from_table('posts', '*', f"WHERE posts.post_id = '{post_id}'")

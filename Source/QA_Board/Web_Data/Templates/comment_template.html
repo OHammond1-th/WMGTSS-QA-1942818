@@ -5,6 +5,20 @@
             <p class="card-text"> {{child.description}} </p>
             <p class="text-muted"> {{child.date_created}} </p>
         </div>
+        <div class="reply-input">
+            <input type="text"
+                   class="comment-input"
+                   id="{{ child.ident }}-comment"
+                   name="{{ child.ident }}-comment"
+                   placeholder="Reply here"
+            >
+            <button type="button"
+                    class="comment-submit"
+                    id="{{ child.ident }}-submit"
+                    name="{{ child.ident }}-submit"
+                    value="{{ child.ident }}"
+            >Submit</button>
+        </div>
         <div class="card-footer">
             {{ display_comment_tree(child) }}
         </div>
@@ -12,28 +26,26 @@
 {% endfor %}
 {% endmacro %}
 
-{% if comment %}
 <div class="card">
     <div class="card-body">
         <p class="card-text"> {{comment.description}} </p>
         <p class="text-muted"> {{comment.date_created}} </p>
     </div>
+    <div class="reply-input">
+        <input type="text"
+               class="comment-input"
+               id="{{ comment.ident }}-comment"
+               name="{{ comment.ident }}-comment"
+               placeholder="Reply here"
+        >
+        <button type="button"
+                class="comment-submit"
+                id="{{ comment.ident }}-submit"
+                name="{{ comment.ident }}-submit"
+                value="{{ comment.ident }}"
+        >Submit</button>
+    </div>
     <div class="card-footer">
         {{ display_comment_tree(comment) }}
     </div>
 </div>
-{% else %}
-<div class="card">
-    <div class="card-body">
-        <form class="answer-box center">
-            <input type="text"
-                   class="comment-field"
-                   name="new-comment"
-                   id="new-comment"
-                   placeholder="Write a new comment here..."
-            >
-        </form>
-        <button type="button" class="comment-button" onclick="window.location.href='{{url_for('views.create_comment', question_id=question.ident)}}';">Comment</button>
-    </div>
-</div>
-{% endif %}
