@@ -1,6 +1,7 @@
 import flask as fk
 import flask_login as fk_lg
 from .models import User
+from . import wmgtss_qa
 
 
 def create_website():
@@ -22,3 +23,8 @@ def create_website():
         return User.get_by_id(user_id)
 
     return app
+
+
+def test_website():
+    wmgtss_qa.db = wmgtss_qa.DB_singleton("WMGTSS_QA_TEST", "wmg_admin", "warwickuni22")
+    return create_website()

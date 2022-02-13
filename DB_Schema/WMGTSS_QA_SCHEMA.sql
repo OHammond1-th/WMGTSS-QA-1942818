@@ -1,13 +1,12 @@
-
 CREATE TABLE "roles" (
 	"role_id" BIGSERIAL PRIMARY KEY,
-	"role_name" VARCHAR(256) NOT NULL,
+	"role_name" VARCHAR(256) NOT NULL UNIQUE,
 	"role_elevated" BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE "courses" (
 	"course_id" BIGSERIAL PRIMARY KEY,
-	"course_name" VARCHAR(256) NOT NULL,
+	"course_name" VARCHAR(256) NOT NULL UNIQUE,
 	"course_start" DATE,
 	"course_end" DATE,
 	CHECK ("course_start" < "course_end" OR "course_end" = NULL)

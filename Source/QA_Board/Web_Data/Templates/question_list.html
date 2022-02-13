@@ -20,12 +20,12 @@
 {% block scroll_content %}
     {% if public_questions|length or private_questions|length %}
         <div class="container">
-            <ul class="published" id="ques-pub">
+            <ul class="published question-list" id="ques-pub">
                 {% for question in public_questions %}
                     {% include "question_template.html" %}
                 {% endfor %}
             </ul>
-            <ul class="personal" id="ques-pri">
+            <ul class="personal question-list" id="ques-pri">
                 {% for question in private_questions %}
                     {% include "question_template.html" %}
                 {% endfor %}

@@ -31,13 +31,27 @@ body {
     box-sizing: content-box;
 }
 
+.question-list {
+    padding-left: 0px;
+}
+
+.title {
+    float: left;
+    width: 90%;
+}
+
+.check {
+    margin: 10px;
+    float: right;
+}
+
 .elevated-options {
     float: right;
     z-index: 1;
 }
 
 .question {
-    padding-bottom: 50px;
+    padding-bottom: 70px;
 }
 
 .answer-box {
@@ -85,6 +99,16 @@ body {
 
 .page-text {
     text-align: center;
+}
+
+.reply-input {
+    background: rgb(100, 100 ,100);
+}
+
+.comment-input {
+    margin: 8px;
+    padding: 2px;
+    width: 80%;
 }
 
 .comment-button {

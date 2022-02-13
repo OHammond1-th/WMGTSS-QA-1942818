@@ -10,7 +10,7 @@
         </div>
         <div class="meta-text" id="post-author">
 
-            {% if question.published is true %}
+            {% if question.published%}
             <p>{{ author.firstname }} {{ author.lastname }}</p>
             {% else %}
             <p>Anonymous</p>

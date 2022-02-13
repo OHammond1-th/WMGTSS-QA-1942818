@@ -1,6 +1,6 @@
 import traceback
 
-from flask import Blueprint, request, redirect, url_for, render_template, flash
+from flask import Blueprint, request, redirect, url_for, render_template, flash, escape
 from flask_login import login_required, logout_user, current_user
 from .models import Course, User, Question, Comment
 
@@ -48,9 +48,9 @@ def question_list():
                                    )
 
         if request.method == 'POST':
-            title = request.form['title']
-            description = request.form['description']
-            course_input = request.form['selected-course']
+            title = escape(request.form['title'])
+            description = escape(request.form['description'])
+            course_input = escape(request.form['selected-course'])
             publishable = True if request.form.get('publishable') == "on" else False
 
             for course in courses:
@@ -92,8 +92,8 @@ def question_page(question_id):
             return redirect(url_for("views.question_list"))
 
     if request.method == 'POST':
-        parent = request.form['comment-parent']
-        text = request.form['comment-text']
+        parent = escape(request.form['comment-parent'])
+        text = escape(request.form['comment-text'])
 
         if int(parent) == -1:
             parent = "NULL"
@@ -130,9 +130,37 @@ def answer_question(question_id):
         return render_template("question_answer.html", question=Question.get_question_by_id(question_id))
 
     if current_user.is_elevated() and request.method == 'POST':
-        Question.provide_answer(question_id, request.form['answer'] if request.form['answer'] is not "None" else None)
+        answer = escape(request.form['answer'])
+
+        # Default for empty answer is None so it must be converted from string to NoneType
+        answer = answer if answer is not "None" else None
+        Question.provide_answer(question_id, answer)
 
     return redirect(url_for("views.question_page", question_id=question_id))
+
+
+@views.route("/Questions/<int:question_id>/Publish")
+@login_required
+def publish_question(question_id):
+    success = Question.publish(question_id)
+
+    if success:
+        return redirect(url_for("views.question_list"))
+
+    else:
+        return error_html()
+
+
+@views.route("/Question/<int:question_id>/Unpublish")
+@login_required
+def unpublish_question(question_id):
+    success = Question.unpublish(question_id)
+
+    if success:
+        return redirect(url_for("views.question_list"))
+
+    else:
+        return error_html()
 
 
 def error_html():

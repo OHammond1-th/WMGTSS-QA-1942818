@@ -1,4 +1,5 @@
 {% macro display_comment_tree(parent) %}
+<div class="card-footer">
 {% for child in parent.children %}
     <div class="card">
         <div class="card-body">
@@ -19,11 +20,10 @@
                     value="{{ child.ident }}"
             >Submit</button>
         </div>
-        <div class="card-footer">
-            {{ display_comment_tree(child) }}
-        </div>
+        {{ display_comment_tree(child) }}
     </div>
 {% endfor %}
+</div>
 {% endmacro %}
 
 <div class="card">
@@ -45,7 +45,5 @@
                 value="{{ comment.ident }}"
         >Submit</button>
     </div>
-    <div class="card-footer">
-        {{ display_comment_tree(comment) }}
-    </div>
+    {{ display_comment_tree(comment) }}
 </div>

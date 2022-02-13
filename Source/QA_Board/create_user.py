@@ -20,13 +20,15 @@ def get_role_id(role):
 def create_new_user(role, username, firstname, lastname, dob, password=None):
 
     if password:
-        password = generate_password_hash(str(password))
+        password = f"'{generate_password_hash(str(password))}'"
+    else:
+        password = 'NULL'
 
     database.query(
         f"INSERT INTO "
         f"users(role_id, user_username, user_password, user_firstname, user_lastname, user_dateofbirth) "
         f"VALUES "
-        f"('{role}', '{str(username)}', '{password}', '{str(firstname)}', '{str(lastname)}', '{str(dob)}') "
+        f"('{role}', '{str(username)}', {password}, '{str(firstname)}', '{str(lastname)}', '{str(dob)}') "
     )
 
 
@@ -40,14 +42,12 @@ def query_from_file(file_path):
 
     try:
         for line in lines:
-            line_args = line[:-2].split(',')
+            line_args = line.split(',')
             line_args[0] = get_role_id(line_args[0])[0]
-
-            print(line_args)
 
             create_new_user(*line_args)
 
-        commit()
+            commit()
 
     except ValueError as e:
         print(f"Args did not meet those required:\t{e}/5-6")

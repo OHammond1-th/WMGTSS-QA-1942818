@@ -34,11 +34,11 @@ def query_from_file(file_path):
 
     try:
         for line in lines:
-            line_args = line[:-2].split(',')
+            line_args = line[:-1].split(',')
 
             create_new_course(*line_args)
 
-        commit()
+            commit()
 
     except ValueError as e:
         print(f"Args did not meet those required:\t{e}/2-3")
@@ -53,8 +53,8 @@ if __name__ == "__main__":
 
     database = DB_API("WMGTSS_QA_TEST", "administrator", "default")
 
-    if exists(argv[0]):
-        query_from_file(argv[0])
+    if exists(argv[1]):
+        query_from_file(argv[1])
 
     else:
         create_new_course(*argv)

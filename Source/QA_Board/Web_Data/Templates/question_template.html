@@ -1,9 +1,9 @@
 <li class="list-group-item card question">
     <a href="{{url_for('views.question_page', question_id=question.ident)}}">
         <h4 class="title" >{{ question.title }}</h4>
-        {% if question.answered %}
+        {% if question.answer is not none %}
         <div class="check">
-            <img src="">
+            <img src="{{url_for('static', filename='Resources/green_tick.png')}}">
         </div>
         {% endif %}
     </a>
@@ -12,6 +12,11 @@
         <div class="elevated-options">
             <button type="button" onclick="window.location.href='{{url_for('views.answer_question', question_id=question.ident)}}';">Answer</button>
             <button type="button" onclick="window.location.href='{{url_for('views.delete_question', question_id=question.ident)}}';">Delete</button>
+            {% if question.publishable and question.published %}
+            <button type="button" onclick="window.location.href='{{url_for('views.unpublish_question', question_id=question.ident)}}';">Unpublish</button>
+            {% elif question.publishable %}
+            <button type="button" onclick="window.location.href='{{url_for('views.publish_question', question_id=question.ident)}}';">Publish</button>
+            {% endif %}
         </div>
     </form>
     {% endif %}

@@ -128,6 +128,14 @@ class Question:
         return wmgtss_qa.db.update_question_with_answer(question_id, answer)
 
     @staticmethod
+    def publish(question_id):
+        return wmgtss_qa.db.set_publish_state(question_id, True)
+
+    @staticmethod
+    def unpublish(question_id):
+        return wmgtss_qa.db.set_publish_state(question_id, False)
+
+    @staticmethod
     def delete(question_id):
         return wmgtss_qa.db.delete_from_questions(question_id)
 

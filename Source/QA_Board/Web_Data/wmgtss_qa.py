@@ -111,11 +111,14 @@ class DB_singleton(DB_API):
     def set_user_password(self, user_id, password):
         return self.update_table_row('users', ['user_password'], [password], user_id)
 
-    def update_question_with_answer(self, question_id, answer):
-        return self.update_table_row('posts', ['post_answer'], [answer], question_id)
+    def set_publish_state(self, post_id, state: bool):
+        return self.update_table_row('posts', ['post_published'], [state], post_id)
 
-    def delete_from_questions(self, question_id):
-        return self.delete_from_table('posts', question_id)
+    def update_post_with_answer(self, post_id, answer):
+        return self.update_table_row('posts', ['post_answer'], [answer], post_id)
+
+    def delete_from_posts(self, post_id):
+        return self.delete_from_table('posts', post_id)
 
 
 db = DB_singleton("WMGTSS_QA", "web_client", "default")

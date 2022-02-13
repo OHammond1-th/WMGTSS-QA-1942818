@@ -1,0 +1,3 @@
+call inject_user_file.bat
+call inject_course_file.bat
+call inject_enrollments_file.bat
