@@ -19,6 +19,9 @@
                     name="{{ child.ident }}-submit"
                     value="{{ child.ident }}"
             >Submit</button>
+            {% if user.ident == child.author or user.elevated %}
+            <button type="button" onclick="window.location.href='{{url_for('views.delete_comment', question_id=question.ident, comment_id=child.ident)}}';">Delete</button>
+            {% endif %}
         </div>
         {{ display_comment_tree(child) }}
     </div>
@@ -44,6 +47,9 @@
                 name="{{ comment.ident }}-submit"
                 value="{{ comment.ident }}"
         >Submit</button>
+        {% if user.ident == comment.author or user.elevated %}
+        <button type="button" onclick="window.location.href='{{url_for('views.delete_comment', question_id=question.ident, comment_id=comment.ident)}}';">Delete</button>
+        {% endif %}
     </div>
     {{ display_comment_tree(comment) }}
 </div>

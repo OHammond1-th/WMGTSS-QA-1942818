@@ -15,6 +15,7 @@ def protect_construct(class_type, arguments):
 
 
 pc = protect_construct
+db = wmgtss_qa.DB_singleton("WMGTSS_QA", "web_client", "default")
 
 
 @dataclass
@@ -26,15 +27,15 @@ class Course:
 
     @staticmethod
     def get_by_id(course_id):
-        return pc(Course, wmgtss_qa.db.get_course_by_id(course_id))
+        return pc(Course, db.get_course_by_id(course_id))
 
     @staticmethod
     def get_by_name(course_name):
-        return pc(Course, wmgtss_qa.db.get_course_by_name(course_name))
+        return pc(Course, db.get_course_by_name(course_name))
 
     @staticmethod
     def get_random():
-        return pc(Course, wmgtss_qa.db.get_random_course())
+        return pc(Course, db.get_random_course())
 
 
 @dataclass
@@ -50,14 +51,14 @@ class User(UserMixin):
     created: dt.date
 
     def is_elevated(self):
-        return wmgtss_qa.db.get_user_elevation(self.ident)
+        return db.get_user_elevation(self.ident)
 
     def update_interaction(self):
 
         if not self.is_elevated():
             self.last_interaction = dt.datetime.today().date()
 
-        return wmgtss_qa.db.update_table_row("users", ["user_interacted_last"], [self.last_interaction], self.ident)
+        return db.update_table_row("users", ["user_interacted_last"], [self.last_interaction], self.ident)
 
     def hasnt_interacted_today(self):
         today = dt.date.today()
@@ -75,27 +76,27 @@ class User(UserMixin):
         return str(self.ident)
 
     def get_classes(self):
-        return [Course.get_by_id(enrollment[0]) for enrollment in wmgtss_qa.db.get_users_enrollments(self.get_id())]
+        return [Course.get_by_id(enrollment[0]) for enrollment in db.get_users_enrollments(self.get_id())]
 
     @staticmethod
     def set_password_by_id(user_id, password):
-        return wmgtss_qa.db.set_user_password(user_id, password)
+        return db.set_user_password(user_id, password)
 
     @staticmethod
     def get_by_id(user_id):
-        return pc(User, wmgtss_qa.db.get_user(user_id))
+        return pc(User, db.get_user(user_id))
 
     @staticmethod
     def get_by_username(username):
-        return pc(User, wmgtss_qa.db.get_user_by_username(username))
+        return pc(User, db.get_user_by_username(username))
 
     @staticmethod
     def get_all_students():
-        return [pc(User, result) for result in wmgtss_qa.db.get_users_by_role("student")]
+        return [pc(User, result) for result in db.get_users_by_role("student")]
 
     @staticmethod
     def get_random():
-        return pc(User, wmgtss_qa.db.get_random_user())
+        return pc(User, db.get_random_user())
 
 
 @dataclass
@@ -113,11 +114,11 @@ class Question:
 
     @staticmethod
     def create_question(course_id, author_id, title, description, publishable):
-        return wmgtss_qa.db.insert_into_posts(course_id, author_id, title, description, publishable)[0]
+        return db.insert_into_posts(course_id, author_id, title, description, publishable)[0]
 
     @staticmethod
     def get_class_questions(class_id):
-        return [pc(Question, result) for result in wmgtss_qa.db.get_posts_by_class(class_id)]
+        return [pc(Question, result) for result in db.get_posts_by_class(class_id)]
 
     @staticmethod
     def get_public_questions(classes):
@@ -129,27 +130,27 @@ class Question:
 
     @staticmethod
     def get_private_questions(user_id):
-        return [pc(Question, result) for result in wmgtss_qa.db.get_posts_by_user(user_id)]
+        return [pc(Question, result) for result in db.get_posts_by_user(user_id)]
 
     @staticmethod
     def get_question_by_id(question_id):
-        return pc(Question, wmgtss_qa.db.get_post(question_id))
+        return pc(Question, db.get_post(question_id))
 
     @staticmethod
     def provide_answer(question_id, answer):
-        return wmgtss_qa.db.update_question_with_answer(question_id, answer)
+        return db.update_post_with_answer(question_id, answer)
 
     @staticmethod
     def publish(question_id):
-        return wmgtss_qa.db.set_publish_state(question_id, True)
+        return db.set_publish_state(question_id, True)
 
     @staticmethod
     def unpublish(question_id):
-        return wmgtss_qa.db.set_publish_state(question_id, False)
+        return db.set_publish_state(question_id, False)
 
     @staticmethod
     def delete(question_id):
-        return wmgtss_qa.db.delete_from_questions(question_id)
+        return db.delete_from_posts(question_id)
 
 
 @dataclass
@@ -165,11 +166,15 @@ class Comment:
 
     @staticmethod
     def create_comment(post_id, author_id, description, parent_id=None):
-        return wmgtss_qa.db.insert_into_comments(post_id, author_id, description, parent_id)
+        return db.insert_into_comments(post_id, author_id, description, parent_id)
+
+    @staticmethod
+    def soft_delete_comment(comment_id):
+        return db.delete_comment(comment_id)
 
     @staticmethod
     def get_post_comments(post_id):
-        comments = [pc(Comment, result) for result in wmgtss_qa.db.get_post_comments(post_id)]
+        comments = [pc(Comment, result) for result in db.get_post_comments(post_id)]
         comment_tree = []
 
         print(comments)

@@ -1,5 +1,7 @@
 # WMGTSS-QA-1942818
 
+# All Python was written in 3.7
+
 ### MAKE SURE TO RUN ANY PYTHON SCRIPT FROM THE VENV LOCATED IN <Directory where download/git-clone is>\WMGTSS-QA-1942818\Source\QA_Board ###
 ### OTHERWISE WINDOWS WILL TRY TO USE YOUR LOCAL INSTALLATION										  ###
 
@@ -15,7 +17,8 @@ When you are in pgAdmin setup a user and create two databases named:
 WMGTSS_QA
 WMGTSS_QA_TEST
 
-Inside of one of the databases right-click the name in the explorer and select "Query Tool", then paste the code from the file "WMGTSS-QA-1942818\DB_Schema\users_and_roles.sql" and hit run
+Inside of one of the databases right-click the name in the explorer and select "Query Tool", then paste the code from the file "WMGTSS-QA-1942818\DB_Schema\users_and_roles.sql" and hit run.
+Then go to both databases and using the query tool manually copy and paste the schema code from "WMGTSS-QA-1942818\DB_Schema\WMGTSS_QA_SCHEMA.sql" and run it.
 
 
 From the given directory run this command with the tags replaced by your Postgres username and password:

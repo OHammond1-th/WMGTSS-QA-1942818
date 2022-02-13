@@ -82,12 +82,14 @@ def question_page(question_id):
         question = Question.get_question_by_id(question_id)
         course = Course.get_by_id(question.course)
         author = User.get_by_id(question.author)
+        user = current_user
         comments = Comment.get_post_comments(question_id)
 
         print(comments)
 
         if question:
-            return render_template("question_page.html", question=question, author=author, comments=comments, course=course)
+            return render_template("question_page.html", question=question,
+                                   author=author, user=user, comments=comments, course=course)
         else:
             return redirect(url_for("views.question_list"))
 
@@ -110,7 +112,7 @@ def question_page(question_id):
         return "<h1>405: Method not allowed.</h1>"
 
 
-@views.route("/Deleting/<int:question_id>")
+@views.route("/Questions/<int:question_id>/Deleting")
 @login_required
 def delete_question(question_id):
     success = Question.delete(question_id)
@@ -120,6 +122,13 @@ def delete_question(question_id):
 
     else:
         return error_html()
+
+
+@views.route("/Questions/<int:question_id>/Comments/<int:comment_id>/Deleting")
+@login_required
+def delete_comment(question_id, comment_id):
+    Comment.soft_delete_comment(comment_id)
+    return redirect(url_for("views.question_page", question_id=question_id))
 
 
 @views.route("/Questions/<int:question_id>/Answer", methods=['GET', 'POST'])

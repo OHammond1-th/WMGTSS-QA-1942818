@@ -16,6 +16,7 @@ class DB_singleton(DB_API):
         super().__init__(dbname, user, password)
 
     def set_db(self, database):
+        self.database.close()
         self.database = database
 
     def select_one_random(self, table):
@@ -107,7 +108,10 @@ class DB_singleton(DB_API):
         return to_list(result)
 
     def get_post_comments(self, post_id):
-        result = self.select_from_table('comments', '*', f"WHERE comments.post_id = '{post_id}'")
+        result = self.select_from_table('comments', '*', f"WHERE"
+                                                         f" comments.post_id = '{post_id}' "
+                                                         f"ORDER BY"
+                                                         f" comments.comment_created DESC")
         return to_list(result)
 
     def get_post(self, post_id):
@@ -133,11 +137,11 @@ class DB_singleton(DB_API):
     def delete_from_posts(self, post_id):
         return self.delete_from_table('posts', post_id)
 
+    def delete_comment(self, comment_id):
+        return self.update_table_row('comments', ['comment_description'], ['<comment deleted>'], comment_id)
+
     def get_random_course(self):
         return self.select_one_random("courses")
 
     def get_random_user(self):
         return self.select_one_random("users")
-
-
-db = DB_singleton("WMGTSS_QA_TEST", "wmg_admin", "warwickuni22")
