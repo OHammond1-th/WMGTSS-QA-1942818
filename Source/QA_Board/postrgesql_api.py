@@ -6,6 +6,7 @@ import sys
 class DB_API:
 
     def __init__(self, dbname, user, password):
+        print(dbname, user, password)
         self.database = psql.connect(f"dbname='{dbname}' user='{user}' password='{password}'")
         self.cursor = self.database.cursor()
         self.result_buffer = None

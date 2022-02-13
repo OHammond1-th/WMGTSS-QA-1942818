@@ -15,6 +15,8 @@ def create_website():
     app.register_blueprint(auth, url_prefix="/Auth")
     app.register_blueprint(views, url_prefix="/")
 
+    wmgtss_qa.db.set_db(wmgtss_qa.DB_singleton("WMGTSS_QA", "web_client", "default"))
+
     login_manager = fk_lg.LoginManager(app)
     login_manager.login_view = "auth.login"
 
@@ -26,5 +28,5 @@ def create_website():
 
 
 def test_website():
-    wmgtss_qa.db = wmgtss_qa.DB_singleton("WMGTSS_QA_TEST", "wmg_admin", "warwickuni22")
+    wmgtss_qa.db.set_db(wmgtss_qa.DB_singleton("WMGTSS_QA_TEST", "wmg_admin", "warwickuni22"))
     return create_website()

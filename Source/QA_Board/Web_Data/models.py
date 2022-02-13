@@ -28,6 +28,14 @@ class Course:
     def get_by_id(course_id):
         return pc(Course, wmgtss_qa.db.get_course_by_id(course_id))
 
+    @staticmethod
+    def get_by_name(course_name):
+        return pc(Course, wmgtss_qa.db.get_course_by_name(course_name))
+
+    @staticmethod
+    def get_random():
+        return pc(Course, wmgtss_qa.db.get_random_course())
+
 
 @dataclass
 class User(UserMixin):
@@ -84,6 +92,10 @@ class User(UserMixin):
     @staticmethod
     def get_all_students():
         return [pc(User, result) for result in wmgtss_qa.db.get_users_by_role("student")]
+
+    @staticmethod
+    def get_random():
+        return pc(User, wmgtss_qa.db.get_random_user())
 
 
 @dataclass

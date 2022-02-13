@@ -31,6 +31,8 @@ def create_new_user(role, username, firstname, lastname, dob, password=None):
         f"('{role}', '{str(username)}', {password}, '{str(firstname)}', '{str(lastname)}', '{str(dob)}') "
     )
 
+    commit()
+
 
 def query_from_file(file_path):
 
@@ -46,8 +48,6 @@ def query_from_file(file_path):
             line_args[0] = get_role_id(line_args[0])[0]
 
             create_new_user(*line_args)
-
-            commit()
 
     except ValueError as e:
         print(f"Args did not meet those required:\t{e}/5-6")
@@ -67,6 +67,4 @@ if __name__ == "__main__":
 
     else:
         create_new_user(*argv[1:])
-
-    database.commit()
 

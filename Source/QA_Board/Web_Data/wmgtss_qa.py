@@ -15,6 +15,16 @@ class DB_singleton(DB_API):
     def __init__(self, dbname, user, password):
         super().__init__(dbname, user, password)
 
+    def set_db(self, database):
+        self.database = database
+
+    def select_one_random(self, table):
+        try:
+            self.query(f"SELECT * FROM {table} ORDER BY random() LIMIT 1")
+            return self.get_result()
+        except psql.Error:
+            return None
+
     def select_from_table(self, table, columns="*", constraints=""):
         try:
             self.query(f"SELECT {columns} FROM {table} {constraints}")
@@ -64,6 +74,9 @@ class DB_singleton(DB_API):
 
     def get_course_by_id(self, course_id):
         return self.select_from_table('courses', '*', f"WHERE courses.course_id = '{course_id}'")
+
+    def get_course_by_name(self, course_name):
+        return self.select_from_table('courses', '*', f"WHERE courses.course_name = '{course_name}'")
 
     def get_user(self, user_id):
         return self.select_from_table('users', '*', f"WHERE users.user_id = '{user_id}'")
@@ -120,5 +133,11 @@ class DB_singleton(DB_API):
     def delete_from_posts(self, post_id):
         return self.delete_from_table('posts', post_id)
 
+    def get_random_course(self):
+        return self.select_one_random("courses")
 
-db = DB_singleton("WMGTSS_QA", "web_client", "default")
+    def get_random_user(self):
+        return self.select_one_random("users")
+
+
+db = DB_singleton("WMGTSS_QA_TEST", "wmg_admin", "warwickuni22")
