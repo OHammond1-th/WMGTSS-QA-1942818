@@ -20,7 +20,7 @@ CREATE TABLE "users" (
 	"user_firstname" VARCHAR(256) NOT NULL,
 	"user_lastname" VARCHAR(256) NOT NULL,
 	"user_dateofbirth" DATE NOT NULL,
-	"user_interacted_last" DATE,
+	"user_interacted_last" DATE DEFAULT '2000-01-01',
 	"user_created" DATE DEFAULT CURRENT_DATE,
 	constraint "fk_role_id" foreign key ("role_id") REFERENCES "roles"("role_id"),
 	CHECK ("user_dateofbirth" < CURRENT_DATE)

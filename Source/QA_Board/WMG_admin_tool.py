@@ -9,6 +9,9 @@ import enroll_user
 
 
 class CreateUserForm(tk.Toplevel):
+    """
+    Form that allows the operator to pass data for a new user to be created
+    """
 
     def __init__(self, root, role, **kw):
         super().__init__(root, **kw)
@@ -55,22 +58,34 @@ class CreateUserForm(tk.Toplevel):
         self.root.grab_set()
 
     def insert_data(self):
-
+        """
+        Takes the gathered data and attempts to create a new user
+        :return:
+        """
         dateofbirth = datetime.date(
             int(self.dob["year"].get()),
             int(self.dob["month"].get()),
             int(self.dob["day"].get())
         )
 
+        self.user_data = [user_data.get() for user_data in self.user_data]
+
         create_user.create_new_user(self.role, *self.user_data, dateofbirth)
 
     def exit(self):
+        """
+        Commits all changes made and closes the form
+        :return:
+        """
         create_user.commit()
         self.root.grab_release()
         self.destroy()
 
 
 class CreateCourseForm(tk.Toplevel):
+    """
+    Form that allows the operator to pass data for a new course to be created
+    """
 
     def __init__(self, root, **kw):
         super().__init__(root, **kw)
@@ -117,6 +132,10 @@ class CreateCourseForm(tk.Toplevel):
         self.root.grab_set()
 
     def insert_data(self):
+        """
+        Takes the gathered data and attempts to create a new course
+        :return:
+        """
 
         start_date = datetime.date(
             int(self.start_date["year"].get()),
@@ -133,12 +152,20 @@ class CreateCourseForm(tk.Toplevel):
         create_course.create_new_course(self.name.get(), start_date, end_date)
 
     def exit(self):
+        """
+        Commits all changes made and closes the form
+        :return:
+        """
         create_course.commit()
         self.root.grab_release()
         self.destroy()
 
 
 class AdminTool(tk.Tk):
+
+    """
+    Admin tool to be used by WMG employees to manipulate the data stored in the WMGTSS database with ease
+    """
 
     def __init__(self):
         super().__init__("WMG admin")
@@ -167,6 +194,10 @@ class AdminTool(tk.Tk):
         self.mainloop()
 
     def login(self):
+        """
+        Requests a user logs in with their wmg_admin password stored in the database
+        :return:
+        """
         self.login_window = tk.Toplevel(self)
         self.login_window.title("WMG Login")
         self.login_window.geometry("1000x400")
@@ -185,6 +216,10 @@ class AdminTool(tk.Tk):
         status_label = tk.Message(self.login_window, textvariable=self.connection_status, width=400).pack()
 
     def connect(self):
+        """
+        Attempts to make a connection to the WMGTSS database
+        :return:
+        """
         try:
             self.database = DB_API("WMGTSS_QA", "wmg_admin", self.password.get())
 
@@ -201,6 +236,11 @@ class AdminTool(tk.Tk):
             print(e)
 
     def admin_dashboard(self):
+        """
+        The front page of the tool that allwos the operator to create new data and make enrollment connections per
+         each course
+        :return:
+        """
         add_options = tk.Frame(self).pack(side=tk.TOP)
         add_student = tk.Button(add_options, text="Add Students", command=lambda: CreateUserForm(self, "student")).pack(fill=tk.X)
         add_teacher = tk.Button(add_options, text="Add Teacher", command=lambda: CreateUserForm(self, "teacher")).pack(fill=tk.X)
@@ -214,6 +254,11 @@ class AdminTool(tk.Tk):
         refresh_button = tk.Button(self, text="Refresh", command=self.refresh_database).pack(fill=tk.X)
 
     def open_course(self, course):
+        """
+        Enrollment window that allows the operator to move users to and from an enrollment status
+        :param course: The course that enrollments should be made too
+        :return:
+        """
         self.refresh_database()
         relevant_enrollment_user_ids = {
             enrollment[2] for enrollment in self.enrollment_list if course[0] == enrollment[0]
@@ -252,6 +297,7 @@ class AdminTool(tk.Tk):
 
         page.grid()
 
+        # get the current enrollments and sort the users into assigned and not assigned
         for user in self.user_list:
             if user[0] in relevant_enrollment_user_ids:
                 self.users_enrolled.insert(tk.END, user)
@@ -260,14 +306,33 @@ class AdminTool(tk.Tk):
                 self.users_not_enrolled.insert(tk.END, user)
 
     def enroll(self, index, item):
+        """
+        Sets a user into the enrolled position
+        :param index: Their index in the unenrolled list
+        :param item: The user to move
+        :return:
+        """
         self.users_enrolled.insert(tk.END, item)
         self.users_not_enrolled.delete(index)
 
     def unenroll(self, index, item):
+        """
+        Sets a user into the unenrolled position
+        :param index: Their index in the enrolled list
+        :param item: The user to move
+        :return:
+        """
         self.users_not_enrolled.insert(tk.END, item)
         self.users_enrolled.delete(index)
 
     def compute_changes(self, course, old_users_enrolled):
+        """
+        Compares old enrollments to the current state of the enrolled and unenrolled lists to decide which enrollments
+        must be created and which must be deleted
+        :param course: Current course to enroll to
+        :param old_users_enrolled: Old enrollments
+        :return:
+        """
         enrolled = {user[0] for user in self.users_enrolled.get(0, tk.END)}
         unenrolled = {user[0] for user in self.users_not_enrolled.get(0, tk.END)}
 
@@ -286,6 +351,10 @@ class AdminTool(tk.Tk):
         self.database.commit()
 
     def refresh_database(self):
+        """
+        Updates all the memory for the tool with data from the database
+        :return:
+        """
 
         self.course_list.delete(0, tk.END)
         [self.course_list.insert(tk.END, course) for course in self.database.query("SELECT * FROM courses")]

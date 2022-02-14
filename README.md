@@ -2,11 +2,11 @@
 
 # All Python was written in 3.7
 
+# GitHub link: https://github.com/OHammond1-th/WMGTSS-QA-1942818
+
 ### MAKE SURE TO RUN ANY PYTHON SCRIPT FROM THE VENV LOCATED IN <Directory where download/git-clone is>\WMGTSS-QA-1942818\Source\QA_Board ###
 ### OTHERWISE WINDOWS WILL TRY TO USE YOUR LOCAL INSTALLATION										  ###
 
-
-1. Database
 
 Get the following dependancies online:
 https://www.pgadmin.org/download/

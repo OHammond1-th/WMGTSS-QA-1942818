@@ -6,13 +6,26 @@ import re
 database = None
 
 
-def set_database(cur_database):
+def set_database(new_database):
+    """
+    Change the current database connection
+    :param new_database:
+    :return:
+    """
     global database
-    database = cur_database
+    database = new_database
 
 
 def create_new_course(name, start, end=None):
+    """
+    Creates a new course in the database
+    :param name: Course name
+    :param start: Course start
+    :param end: Course end
+    :return:
+    """
 
+    # if an end is provided convert it to string
     if end:
         end = str(end)
 
@@ -25,14 +38,20 @@ def create_new_course(name, start, end=None):
 
 
 def query_from_file(file_path):
-
+    """
+    Iterate down a csv file and call create_new_course
+    :param file_path: The file to iterate over
+    :return:
+    """
     lines = None
 
+    # read file into memory
     with open(file_path, 'r') as file:
 
         lines = file.readlines()
 
     try:
+        # for each line create a new course
         for line in lines:
             line_args = line[:-1].split(',')
 
@@ -41,11 +60,13 @@ def query_from_file(file_path):
             commit()
 
     except ValueError as e:
+        # print an error if something has gone wrong
         print(f"Args did not meet those required:\t{e}/2-3")
         database.rollback()
 
 
 def commit():
+    # manual database commit
     database.commit()
 
 

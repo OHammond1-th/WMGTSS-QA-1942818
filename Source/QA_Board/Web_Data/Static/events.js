@@ -1,4 +1,5 @@
 {
+    // Function that shows and hides the question inout form
     $( document.getElementById("main-content") ).click(function() {
         $(".js-hiddenform").slideUp();
     });
@@ -13,6 +14,7 @@
 }
 
 {
+    // Function that gets the input from any comment reply section and sends it to the hidden form
     let reply_buttons = document.getElementsByClassName("comment-submit");
     let form_text = document.getElementById("comment-text");
     let form_parent = document.getElementById("comment-parent");
@@ -34,6 +36,7 @@
 }
 
 {
+    // function to display the course options on the question input form
     let course_select_buttons = document.getElementById("course").children;
 
     for (let option = 0; option < course_select_buttons.length; option++)
@@ -49,6 +52,7 @@
 }
 
 {
+    // function that controls whether the questions shown are public or private
     let pub_question_list = document.getElementById("ques-pub");
     let pri_question_list = document.getElementById("ques-pri");
 
@@ -68,6 +72,7 @@
 }
 
 {
+    // function that will match a search input to all the available questions being displayed
     search_bar = document.getElementById("search-bar");
     search = search_bar.value.toLowerCase();
 

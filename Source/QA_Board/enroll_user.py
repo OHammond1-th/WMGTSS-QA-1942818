@@ -6,13 +6,23 @@ import re
 database = None
 
 
-def set_database(cur_database):
+def set_database(new_database):
+    """
+    Change the current database connection
+    :param new_database:
+    :return:
+    """
     global database
-    database = cur_database
+    database = new_database
 
 
 def create_new_enrollment(course, user):
-
+    """
+    Creates a new enrollment in the database
+    :param course: The course id
+    :param user: The user id
+    :return:
+    """
     database.query(
         f" INSERT INTO "
         f" enrollments(course_id, user_id) "
@@ -22,14 +32,20 @@ def create_new_enrollment(course, user):
 
 
 def query_from_file(file_path):
-
+    """
+    Iterate down a csv file and call create_new_enrollment
+    :param file_path: The file to iterate over
+    :return:
+    """
     lines = None
 
+    # read the file into memory
     with open(file_path, 'r') as file:
 
         lines = file.readlines()
 
     try:
+        # for each line create an enrollment
         for line in lines:
             line_args = line[:-1].split(',')
 
@@ -43,6 +59,7 @@ def query_from_file(file_path):
 
 
 def commit():
+    # manual database commit
     database.commit()
 
 
